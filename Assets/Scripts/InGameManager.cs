@@ -8,11 +8,14 @@ using UnityEngine.SceneManagement;
 public class InGameManager : MonoBehaviourPunCallbacks {
 
 	public GameObject canvas;
+	public GameObject playerPrefab;
 	private bool canvasActive = true;
+
 
 	void Start() {
 		canvasActive = !canvasActive;
 		canvas.SetActive(canvasActive);
+		PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0), Quaternion.identity);
 	}
 
 	void Update() {
