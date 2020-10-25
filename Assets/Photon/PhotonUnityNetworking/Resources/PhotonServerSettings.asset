@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AppSettings:
     AppIdRealtime: 2fa21f25-a17a-498a-adc6-5ffd58ee5cab
-    AppIdChat: 
+    AppIdChat: 3188a819-9c94-4c75-b264-d4ecc8521544
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
@@ -27,7 +27,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: 
+  DevRegion: ru
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -40,4 +40,4 @@ MonoBehaviour:
   - RespawnSpaceship
   DisableAutoOpenWizard: 1
   ShowSettings: 1
-  DevRegionSetOnce: 0
+  DevRegionSetOnce: 1
