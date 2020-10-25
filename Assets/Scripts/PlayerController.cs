@@ -11,8 +11,8 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate() {
 		if (!photonView.IsMine) return;
-		var horizontalChange = Vector3.right * Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
-		var verticalChange = Vector3.up * Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
-		transform.position += horizontalChange + verticalChange;
+		var posChange = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+		if (posChange.magnitude > Vector3.right.magnitude) { posChange = posChange.normalized; }
+		transform.position += posChange * moveSpeed * Time.deltaTime;
 	}
 }
