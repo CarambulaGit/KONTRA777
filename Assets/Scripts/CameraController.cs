@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void Update() {
-		if (photonView.IsMine) { playerCamera.position = transform.position + playerCameraOffset; }
+		if (!photonView.IsMine) return;
+		playerCamera.position = transform.position + playerCameraOffset;
 	}
 }
