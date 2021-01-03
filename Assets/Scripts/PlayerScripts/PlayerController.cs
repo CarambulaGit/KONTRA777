@@ -27,6 +27,10 @@ namespace PlayerScripts
 
 		private void Animate() { AnimateMove(); }
 
-		private void AnimateMove() { animator.SetFloat("MoveSpeed", moveAnimSpeed); }
+		private void AnimateMove()
+		{
+			// animator.
+			animator.SetFloat("MoveSpeed", moveAnimSpeed);
+		}
 	}
 }
