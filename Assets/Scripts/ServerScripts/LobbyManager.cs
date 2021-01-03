@@ -12,8 +12,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks {
 	[Range(1, 8)] public int numOfPlayers = 4;
 
 	void Start() {
-		PhotonNetwork.NickName = "Player " + Random.Range(0, 10);
-		Log($"{PhotonNetwork.NickName} is ready");
+		PhotonNetwork.NickName = "Player " + PhotonNetwork.CountOfPlayers;
+		Log(PhotonNetwork.NickName);
 		PhotonNetwork.GameVersion = "1";
 		PhotonNetwork.AutomaticallySyncScene = true;
 		PhotonNetwork.ConnectUsingSettings();
