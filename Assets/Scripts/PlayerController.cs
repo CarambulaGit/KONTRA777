@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 		var posChange = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 		if (posChange.magnitude > Vector3.right.magnitude) { posChange = posChange.normalized; }
 		animSpeed = posChange.magnitude;
-		transform.position += posChange * moveSpeed * Time.deltaTime;
+		transform.position += posChange * (moveSpeed * Time.deltaTime);
 	}
 
 	private void Animate() { AnimateMove(); }
