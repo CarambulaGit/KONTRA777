@@ -23,7 +23,7 @@ public class WeaponController : MonoBehaviour {
 			Debug.Log($"Hit {hitInfo.transform.name}");
 		} else {
 			lineRenderer.SetPosition(0, firePoint.position);
-			lineRenderer.SetPosition(1, firePoint.up * 100);
+			lineRenderer.SetPosition(1, firePoint.position + firePoint.up * 100);
 		}
 		lineRenderer.enabled = true;
 		yield return new WaitForSeconds(0.02f);
