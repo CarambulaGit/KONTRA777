@@ -1,36 +1,41 @@
 ﻿using Photon.Pun;
 using UnityEngine;
 
-namespace PlayerScripts
-{
-	public class PlayerController : MonoBehaviour {
-		private const float EPSILON = 0.00001f;
-		public float moveSpeed;
-		public Animator animator;
-		private PhotonView photonView;
-		private float moveAnimSpeed;
+namespace PlayerScripts {
+    public class PlayerController : MonoBehaviour {
+        private const float EPSILON = 0.00001f;
+        public float moveSpeed;
+        public Animator animator;
+        private PhotonView photonView;
+        private float moveAnimSpeed;
 
-		void Start() { photonView = GetComponent<PhotonView>(); }
+        void Start() {
+            photonView = GetComponent<PhotonView>();
+        }
 
-		void FixedUpdate() {
-			if (!photonView.IsMine) return;
-			Move(out moveAnimSpeed);
-			Animate();
-		}
+        void FixedUpdate() {
+            if (!photonView.IsMine) return;
+            Move(out moveAnimSpeed);
+            Animate();
+        }
 
-		private void Move(out float animSpeed) {
-			var posChange = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-			if (posChange.magnitude > Vector3.right.magnitude) { posChange = posChange.normalized; }
-			animSpeed = posChange.magnitude;
-			transform.position += posChange * (moveSpeed * Time.deltaTime);
-		}
+        private void Move(out float animSpeed) {
+            var posChange = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+            if (posChange.magnitude > Vector3.right.magnitude) {
+                posChange = posChange.normalized;
+            }
 
-		private void Animate() { AnimateMove(); }
+            animSpeed = posChange.magnitude;
+            transform.position += posChange * (moveSpeed * Time.deltaTime);
+        }
 
-		private void AnimateMove()
-		{
-			// animator.
-			animator.SetFloat("MoveSpeed", moveAnimSpeed);
-		}
-	}
+        private void Animate() {
+            AnimateMove();
+        }
+
+        private void AnimateMove() {
+            // animator.
+            animator.SetFloat("MoveSpeed", moveAnimSpeed);
+        }
+    }
 }
