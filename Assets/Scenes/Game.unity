@@ -316,6 +316,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 3
+--- !u!4 &88693859 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 279586420956350622, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+    type: 3}
+  m_PrefabInstance: {fileID: 88693856}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &88693860 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5586852088690946341, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+    type: 3}
+  m_PrefabInstance: {fileID: 88693856}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1082875026
 GameObject:
   m_ObjectHideFlags: 0
@@ -433,6 +445,9 @@ MonoBehaviour:
   playerPrefab: {fileID: 2316434830828239912, guid: d23c4c39939681a43bf7771b78579f3d,
     type: 3}
   ptm: {fileID: 1143153180}
+  SpawnPoints:
+  - {fileID: 88693859}
+  - {fileID: 88693860}
 --- !u!4 &1143153179
 Transform:
   m_ObjectHideFlags: 0
