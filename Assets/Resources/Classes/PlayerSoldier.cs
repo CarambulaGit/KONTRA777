@@ -32,6 +32,7 @@ namespace Resources.Classes {
         }
 
         public bool IsDead() => this.health <= 0;
+        public void Kill() => this.health = 0;
 
         public void TakeDamage(float damage) {
             this.health -= damage;
