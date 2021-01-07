@@ -10,3 +10,4 @@ Todo:
 9) Пофиксить стандартный спрайт (качество idle спрайта хуже, чем во время бега)
 (micro-done)	10) Сменить точку поворота игрока на его голову 
 11) Реализовать механику разных команд 
+12) Replace damage with ScriptableObject Weapon (TODO in InGameManager)
