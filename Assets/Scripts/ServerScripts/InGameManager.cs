@@ -16,6 +16,7 @@ namespace ServerScripts {
         public PhotonTeamsManager ptm;
         private bool init;
         private bool canvasActive;
+        public Transform[] SpawnPoints;
 
 
         void Start() {
@@ -35,12 +36,13 @@ namespace ServerScripts {
 
 
         private PlayerSoldier AddNewPlayer() {
-            var player = PhotonNetwork.Instantiate(playerPrefab.name,
-                new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0), Quaternion.identity);
+
             var teamsList = ptm.GetAvailableTeams().ToList();
             var minTeamMembers = teamsList.Min(team => ptm.GetTeamMembersCount(team));
             var myTeam = teamsList.First(team => ptm.GetTeamMembersCount(team) == minTeamMembers);
             PhotonNetwork.LocalPlayer.JoinTeam(myTeam);
+            var player = PhotonNetwork.Instantiate(playerPrefab.name,
+                SpawnPoints[(int)myTeam.Code-1].position, Quaternion.identity);
             return new PlayerSoldier(PhotonNetwork.LocalPlayer, PhotonNetwork.NickName, myTeam, 10, player); // TODO replace damage with ScriptableObject Weapon
         }
 
