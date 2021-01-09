@@ -13,7 +13,7 @@ namespace PlayerScripts {
         public Animator animator;
         private PhotonView photonView;
         private float moveAnimSpeed;
-        private bool isDead;
+        public bool isDead { get; private set;}
         [ReadOnly] private float health;
 
         void Start() {
@@ -26,14 +26,13 @@ namespace PlayerScripts {
 
             //InGameManager.localPlayer.health = health;
             //InGameManager.localPlayer.TakeDamage(InGameManager.localPlayer.takenDamageThisTick);
-
+            
             if (isDead) return;
             isDead = InGameManager.localPlayer.IsDead();
 
             if (isDead)
             {
-                Debug.Log("Smet` micro4ela");
-                this.moveSpeed = 0;
+                //Debug.Log("Smet` micro4ela");
                 collider.enabled = false;
                 health = InGameManager.localPlayer.health;
                 moveAnimSpeed = 0;
