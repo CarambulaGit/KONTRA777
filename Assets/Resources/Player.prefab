@@ -305,6 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3fc141274c9ce4459b2ca4f9b35da84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 1096449434158617960}
   moveSpeed: 6
   animator: {fileID: 2035651316840139865}
 --- !u!114 &6015821779679307141
@@ -319,6 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87fa5447239957447bdcc770044df8cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerController: {fileID: 8085647612944181089}
   firePoint: {fileID: 7921706525383594921}
   lineRenderer: {fileID: 2057309264630994300}
 --- !u!114 &-1122572446260933072
@@ -333,6 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4ada6a46c656b74799b3b406df77ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerController: {fileID: 8085647612944181089}
   rotationPoint: {fileID: 6845192660705584141}
 --- !u!114 &-1406704895282809178
 MonoBehaviour:
