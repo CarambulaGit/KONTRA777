@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine;
@@ -7,13 +9,26 @@ namespace Resources.Classes {
     public class PlayerSoldier {
         public static float defaultHealth = 100;
         public static List<PlayerSoldier> players = new List<PlayerSoldier>();
+        public static PlayerSoldier localPlayer;
         public float health;
+        public float damage;
+        public float takenDamageThisTick;
         private Player photonPlayer;
         private string nickname;
         private PhotonTeam team;
-        private float damage;
         private GameObject gOPlayer;
-        public float takenDamageThisTick;
+
+        public static PlayerSoldier FindPSByPhotonPlayer(Player player) {
+            return players.First(somePlayer => somePlayer.photonPlayer.Equals(player));
+        }
+
+        public static PlayerSoldier FindPSByPlayerGO(GameObject gameObject) {
+            return players.First(somePlayer => somePlayer.gOPlayer.Equals(gameObject));
+        }
+
+        public static PlayerSoldier FindPSByNickname(string nickname) {
+            return players.First(somePlayer => somePlayer.nickname.Equals(nickname));
+        }
 
         public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, float damage, GameObject gOPlayer,
             float health, float takenDamageThisTick = 0) {
@@ -36,6 +51,10 @@ namespace Resources.Classes {
 
         public void TakeDamage(float damage) {
             this.health -= damage;
+        }
+
+        public override string ToString() {
+            return $"{photonPlayer}\n{nickname}\n{health}\n{team}\n";
         }
     }
 }
