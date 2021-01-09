@@ -13,8 +13,8 @@ namespace Resources.Classes {
         public float health;
         public float damage;
         public float takenDamageThisTick;
+        public string nickname { get; set; }
         private Player photonPlayer;
-        private string nickname;
         private PhotonTeam team;
         private GameObject gOPlayer;
 
