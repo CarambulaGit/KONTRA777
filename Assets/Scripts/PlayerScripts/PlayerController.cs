@@ -36,11 +36,8 @@ namespace PlayerScripts {
             }
 
             if (!photonView.IsMine) return;
-            // if (!init) {
-            //     PlayerSoldier.players.Add(initPlayerSoldier());
-            //     init = true;
-            // }
-            Debug.Log(PlayerSoldier.players.ToArray().ToStringFull());
+           
+           // Debug.Log(PlayerSoldier.players.ToArray().ToStringFull());
             SynchronizeNetworkVariables();
             if (isDead) return;
             isDead = PlayerSoldier.localPlayer.IsDead();
