@@ -305,6 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3fc141274c9ce4459b2ca4f9b35da84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 1096449434158617960}
   moveSpeed: 6
   animator: {fileID: 2035651316840139865}
 --- !u!114 &6015821779679307141

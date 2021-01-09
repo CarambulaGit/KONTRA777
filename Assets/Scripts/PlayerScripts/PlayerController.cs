@@ -62,10 +62,14 @@ namespace PlayerScripts {
 
         private void Animate() {
             AnimateMove();
+            AnimateDeath();
         }
 
         private void AnimateMove() {
             animator.SetFloat("MoveSpeed", moveAnimSpeed);
+        }
+        private void AnimateDeath() {
+            animator.SetBool("IsDead", isDead);
         }
 
         
