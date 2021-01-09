@@ -7,6 +7,7 @@ TagManager:
   - PlayerCam
   - Dange
   - Box
+  - GameManager
   layers:
   - Default
   - TransparentFX
