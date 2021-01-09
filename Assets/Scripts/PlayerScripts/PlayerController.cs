@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using System.Collections.Generic;
+using Photon.Pun;
 using Resources.Classes;
 using ServerScripts;
 using Unity.Collections;
@@ -15,6 +16,8 @@ namespace PlayerScripts {
         private float moveAnimSpeed;
         public bool isDead { get; private set;}
         [ReadOnly] private float health;
+        [ReadOnly] private float takenDamage;
+        [ReadOnly] private float damage;
 
         void Start() {
             photonView = GetComponent<PhotonView>();
@@ -30,18 +33,15 @@ namespace PlayerScripts {
             if (isDead) return;
             isDead = InGameManager.localPlayer.IsDead();
 
-            if (isDead)
-            {
-                //Debug.Log("Smet` micro4ela");
+            if (isDead) {
                 collider.enabled = false;
                 health = InGameManager.localPlayer.health;
                 moveAnimSpeed = 0;
                 Animate();
-                //todo animate death
                 return;
             }
 
-            
+
             Move(out moveAnimSpeed);
             Animate();
             health = InGameManager.localPlayer.health;
@@ -67,26 +67,33 @@ namespace PlayerScripts {
         private void AnimateMove() {
             animator.SetFloat("MoveSpeed", moveAnimSpeed);
         }
+
         private void AnimateDeath() {
             animator.SetBool("IsDead", isDead);
         }
 
-        
+        private List<PlayerSoldier> initPlayerSoldiers() {
+            List<PlayerSoldier> playerSoldiers = new List<PlayerSoldier>();
+            
+            return playerSoldiers;
+        } 
 
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
             if (stream.IsWriting) {
                 stream.SendNext(health);
+                stream.SendNext(takenDamage);
+                stream.SendNext(damage);
             }
             else {
                 this.health = (float) stream.ReceiveNext();
+                this.takenDamage = (float) stream.ReceiveNext();
+                this.damage = (float) stream.ReceiveNext();
             }
         }
 
         void OnCollisionEnter2D(Collision2D other) {
-            
-            if (other.gameObject.tag.Equals("Box")) 
-            {
+            if (other.gameObject.tag.Equals("Box")) {
                 InGameManager.localPlayer.Kill();
             }
         }
