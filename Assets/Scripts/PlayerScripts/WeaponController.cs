@@ -23,7 +23,6 @@ namespace PlayerScripts {
             StartCoroutine(AnimateShoot(hitInfo));
             PhotonView hittedPlayerPV;
             if (hitInfo.transform.TryGetComponent<PhotonView>(out hittedPlayerPV)) {
-                //TODO take some damage
                 photonView.RPC(nameof(GiveDamageRPC),RpcTarget.All, PlayerSoldier.localPlayer.damage, hittedPlayerPV.ViewID);
             }
 
@@ -32,7 +31,7 @@ namespace PlayerScripts {
 
         [PunRPC]
         private void GiveDamageRPC(float damage, int viewId) {
-            if (PlayerSoldier.localPlayer.gOPlayer.GetComponent<PhotonView>().ViewID != viewId) return;
+            if (PlayerSoldier.localPlayer.photonView.ViewID != viewId) return;
             Debug.Log($"Auch! Taken {damage} damage");
             PlayerSoldier.localPlayer.TakeDamage(damage);
         }

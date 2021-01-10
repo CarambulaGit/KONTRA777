@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine;
@@ -12,11 +13,11 @@ namespace Resources.Classes {
         public static PlayerSoldier localPlayer;
         public float health;
         public float damage;
-        public float takenDamageThisTick;
         public string nickname { get; set; }
         private Player photonPlayer;
         private PhotonTeam team;
         public GameObject gOPlayer;
+        public PhotonView photonView;
 
         public static PlayerSoldier FindPSByPhotonPlayer(Player player) {
             return players.First(somePlayer => somePlayer.photonPlayer.Equals(player));
@@ -30,20 +31,20 @@ namespace Resources.Classes {
             return players.First(somePlayer => somePlayer.nickname.Equals(nickname));
         }
 
-        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, float damage, GameObject gOPlayer,
-            float health, float takenDamageThisTick = 0) {
+        private PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, float damage, GameObject gOPlayer,
+            float health) {
             this.photonPlayer = photonPlayer;
             this.nickname = nickname;
             this.team = team;
             this.damage = damage;
             this.gOPlayer = gOPlayer;
             this.health = health;
-            this.takenDamageThisTick = takenDamageThisTick;
+            this.photonView = this.gOPlayer.GetPhotonView();
             players.Add(this);
         }
 
         public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, float damage, GameObject gOPlayer) :
-            this(photonPlayer, nickname, team, damage, gOPlayer, defaultHealth, 0) {
+            this(photonPlayer, nickname, team, damage, gOPlayer, defaultHealth) {
         }
 
         public bool IsDead() => this.health <= 0;

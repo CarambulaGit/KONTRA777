@@ -22,7 +22,6 @@ namespace PlayerScripts {
         private float moveAnimSpeed;
         private bool init;
         [SerializeField] private float health;
-        [SerializeField] private float takenDamageThisTick;
         private float damage;
 
         void Start() {
@@ -47,23 +46,12 @@ namespace PlayerScripts {
                 return;
             }
 
-            // Tick();
             Move(out moveAnimSpeed);
             Animate();
-            // SynchronizeNetworkVariablesOutput();
-            // Debug.Log(PlayerSoldier.players.ToArray().ToStringFull());
-            // PhotonView.Find()
         }
 
         private void SynchronizeNetworkVariables() {
             health = PlayerSoldier.localPlayer.health;
-            // PlayerSoldier.localPlayer.takenDamageThisTick = takenDamageThisTick;
-            // PlayerSoldier.localPlayer.damage = damage;
-        }
-
-        private void Tick() {
-            PlayerSoldier.localPlayer.TakeDamage(PlayerSoldier.localPlayer.takenDamageThisTick);
-            PlayerSoldier.localPlayer.TakeDamage(0.05f);
         }
 
         private void Kill() {
@@ -111,13 +99,9 @@ namespace PlayerScripts {
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
             if (stream.IsWriting) {
                 stream.SendNext(health);
-                // stream.SendNext(takenDamageThisTick);
-                // stream.SendNext(damage);
             }
             else {
                 this.health = (float) stream.ReceiveNext();
-                // this.takenDamageThisTick = (float) stream.ReceiveNext();
-                // this.damage = (float) stream.ReceiveNext();
             }
         }
 

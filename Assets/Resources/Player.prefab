@@ -323,7 +323,6 @@ MonoBehaviour:
   animator: {fileID: 2035651316840139865}
   NicknameText: {fileID: 2775253944238180557}
   health: 0
-  takenDamageThisTick: 0
 --- !u!114 &4001391294939030087
 MonoBehaviour:
   m_ObjectHideFlags: 0
