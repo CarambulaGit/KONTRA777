@@ -56,9 +56,7 @@ namespace ServerScripts {
             Debug.Log($"{newPlayer.NickName} entered room");
         }
 
-        public override void OnJoinedRoom() {
-            Debug.Log($"Here we are");
-        }
+        public override void OnJoinedRoom() { }
 
         public override void OnPlayerLeftRoom(Player otherPlayer) {
             // todo update PlayerSoldier.players
