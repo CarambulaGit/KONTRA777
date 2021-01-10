@@ -1,31 +1,76 @@
-﻿using Photon.Pun;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Photon.Pun;
+using Photon.Pun.UtilityScripts;
+using Photon.Realtime;
 using Resources.Classes;
 using ServerScripts;
+using TMPro;
 using Unity.Collections;
 using UnityEngine;
 
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
         private const float EPSILON = 0.00001f;
+        public BoxCollider2D collider;
         public float moveSpeed;
         public Animator animator;
+        public TextMeshPro NicknameText;
+        public bool isDead { get; private set; }
+        private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
-        [ReadOnly] private float health;
+        private bool init;
+        [SerializeField] private float health;
+        [SerializeField] private float takenDamageThisTick;
+        private float damage;
 
         void Start() {
+            gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
             photonView = GetComponent<PhotonView>();
-            health = PlayerSoldier.defaultHealth;
+            NicknameText.SetText(photonView.Owner.NickName);
         }
 
         void FixedUpdate() {
+            if (!init) {
+                initPlayerSoldier();
+                init = true;
+            }
+
             if (!photonView.IsMine) return;
-            InGameManager.localPlayer.health = health;
-            InGameManager.localPlayer.TakeDamage(InGameManager.localPlayer.takenDamageThisTick);
+
+            SynchronizeNetworkVariables();
+            if (isDead) return;
+            isDead = PlayerSoldier.localPlayer.IsDead();
+            if (isDead) {
+                Kill();
+                return;
+            }
+
+            // Tick();
             Move(out moveAnimSpeed);
             Animate();
-            health = InGameManager.localPlayer.health;
+            // SynchronizeNetworkVariablesOutput();
+            // Debug.Log(PlayerSoldier.players.ToArray().ToStringFull());
             // PhotonView.Find()
+        }
+
+        private void SynchronizeNetworkVariables() {
+            health = PlayerSoldier.localPlayer.health;
+            // PlayerSoldier.localPlayer.takenDamageThisTick = takenDamageThisTick;
+            // PlayerSoldier.localPlayer.damage = damage;
+        }
+
+        private void Tick() {
+            PlayerSoldier.localPlayer.TakeDamage(PlayerSoldier.localPlayer.takenDamageThisTick);
+            PlayerSoldier.localPlayer.TakeDamage(0.05f);
+        }
+
+        private void Kill() {
+            collider.enabled = false;
+            health = PlayerSoldier.localPlayer.health;
+            moveAnimSpeed = 0;
+            Animate();
         }
 
         private void Move(out float animSpeed) {
@@ -38,20 +83,48 @@ namespace PlayerScripts {
             transform.position += posChange * (moveSpeed * Time.deltaTime);
         }
 
+
         private void Animate() {
             AnimateMove();
+            AnimateDeath();
         }
 
         private void AnimateMove() {
             animator.SetFloat("MoveSpeed", moveAnimSpeed);
         }
 
+        private void AnimateDeath() {
+            animator.SetBool("IsDead", isDead);
+        }
+
+        private PlayerSoldier initPlayerSoldier() {
+            var player = new PlayerSoldier(photonView.Owner, photonView.Owner.NickName,
+                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), 10, gameObject);
+            if (photonView.IsMine) {
+                PlayerSoldier.localPlayer = player;
+            }
+
+            return player;
+        }
+
+
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
             if (stream.IsWriting) {
                 stream.SendNext(health);
+                // stream.SendNext(takenDamageThisTick);
+                // stream.SendNext(damage);
             }
             else {
                 this.health = (float) stream.ReceiveNext();
+                // this.takenDamageThisTick = (float) stream.ReceiveNext();
+                // this.damage = (float) stream.ReceiveNext();
+            }
+        }
+
+        void OnCollisionEnter2D(Collision2D other) {
+            if (other.gameObject.tag.Equals("Box")) {
+                PlayerSoldier.localPlayer.Kill();
+                Kill();
             }
         }
     }

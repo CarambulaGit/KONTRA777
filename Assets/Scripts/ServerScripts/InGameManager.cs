@@ -10,13 +10,13 @@ using UnityEngine.SceneManagement;
 
 namespace ServerScripts {
     public class InGameManager : MonoBehaviourPunCallbacks {
-        public static PlayerSoldier localPlayer { get; private set; }
         public GameObject canvas;
         public GameObject playerPrefab;
         public PhotonTeamsManager ptm;
+        public Transform[] SpawnPoints;
         private bool init;
         private bool canvasActive;
-        public Transform[] SpawnPoints;
+        private GameObject localPlayer;
 
 
         void Start() {
@@ -35,15 +35,13 @@ namespace ServerScripts {
         }
 
 
-        private PlayerSoldier AddNewPlayer() {
-
+        private GameObject AddNewPlayer() {
             var teamsList = ptm.GetAvailableTeams().ToList();
             var minTeamMembers = teamsList.Min(team => ptm.GetTeamMembersCount(team));
             var myTeam = teamsList.First(team => ptm.GetTeamMembersCount(team) == minTeamMembers);
             PhotonNetwork.LocalPlayer.JoinTeam(myTeam);
-            var player = PhotonNetwork.Instantiate(playerPrefab.name,
-                SpawnPoints[(int)myTeam.Code-1].position, Quaternion.identity);
-            return new PlayerSoldier(PhotonNetwork.LocalPlayer, PhotonNetwork.NickName, myTeam, 10, player); // TODO replace damage with ScriptableObject Weapon
+            return PhotonNetwork.Instantiate(playerPrefab.name,
+                SpawnPoints[myTeam.Code - 1].position, Quaternion.identity);
         }
 
         public void Leave() {
@@ -60,10 +58,11 @@ namespace ServerScripts {
 
         public override void OnJoinedRoom() {
             Debug.Log($"Here we are");
-
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer) {
+            // todo update PlayerSoldier.players
+            PlayerSoldier.players.Remove(PlayerSoldier.FindPSByPhotonPlayer(otherPlayer));
             Debug.Log($"{otherPlayer.NickName} left room");
         }
     }

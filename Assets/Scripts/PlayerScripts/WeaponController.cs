@@ -1,38 +1,47 @@
 ﻿using System.Collections;
 using Photon.Pun;
+using Resources.Classes;
 using UnityEngine;
 
 namespace PlayerScripts {
     public class WeaponController : MonoBehaviour {
+        public PlayerController PlayerController;
         public Transform firePoint;
         public LineRenderer lineRenderer;
-        private PhotonView photonView;
+        public PhotonView photonView;
 
-        void Start() {
-            photonView = GetComponent<PhotonView>();
-        }
+        void Start() { }
 
         void Update() {
             if (!photonView.IsMine) return;
+            if (PlayerController.isDead) return;
             if (Input.GetButtonDown("Fire1")) Shoot();
         }
 
         bool Shoot() {
             var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
             StartCoroutine(AnimateShoot(hitInfo));
-            PlayerController hittedPlayerController;
-            if (hitInfo.transform.TryGetComponent<PlayerController>(out hittedPlayerController)) {
+            PhotonView hittedPlayerPV;
+            if (hitInfo.transform.TryGetComponent<PhotonView>(out hittedPlayerPV)) {
                 //TODO take some damage
+                photonView.RPC(nameof(GiveDamageRPC),RpcTarget.AllBuffered, PlayerSoldier.localPlayer.damage, hittedPlayerPV.ViewID);
             }
 
             return hitInfo;
+        }
+
+        [PunRPC]
+        private void GiveDamageRPC(float damage, int viewId) {
+            if (PlayerSoldier.localPlayer.gOPlayer.GetComponent<PhotonView>().ViewID != viewId) return;
+            Debug.Log($"Auch! Taken {damage} damage");
+            PlayerSoldier.localPlayer.TakeDamage(damage);
         }
 
         IEnumerator AnimateShoot(RaycastHit2D hitInfo) {
             if (hitInfo) {
                 lineRenderer.SetPosition(0, firePoint.position);
                 lineRenderer.SetPosition(1, hitInfo.transform.position);
-                Debug.Log($"Hit {hitInfo.transform.name}");
+                // Debug.Log($"Hit {hitInfo.transform.name}");
             }
             else {
                 lineRenderer.SetPosition(0, firePoint.position);
