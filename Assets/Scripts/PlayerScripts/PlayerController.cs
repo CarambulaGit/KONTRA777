@@ -28,7 +28,6 @@ namespace PlayerScripts {
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
             photonView = GetComponent<PhotonView>();
-            health = PlayerSoldier.defaultHealth;
             NicknameText.SetText(photonView.Owner.NickName);
         }
 
@@ -40,7 +39,7 @@ namespace PlayerScripts {
 
             if (!photonView.IsMine) return;
 
-            SynchronizeNetworkVariablesInput();
+            SynchronizeNetworkVariables();
             if (isDead) return;
             isDead = PlayerSoldier.localPlayer.IsDead();
             if (isDead) {
@@ -48,24 +47,19 @@ namespace PlayerScripts {
                 return;
             }
 
-            Tick();
+            // Tick();
             Move(out moveAnimSpeed);
             Animate();
-            SynchronizeNetworkVariablesOutput();
+            // SynchronizeNetworkVariablesOutput();
             // Debug.Log(PlayerSoldier.players.ToArray().ToStringFull());
             // PhotonView.Find()
         }
 
-        private void SynchronizeNetworkVariablesInput() {
-            PlayerSoldier.localPlayer.health = health;
-            PlayerSoldier.localPlayer.takenDamageThisTick = takenDamageThisTick;
-            PlayerSoldier.localPlayer.damage = damage;
-        }
-
-        private void SynchronizeNetworkVariablesOutput() {
+        private void SynchronizeNetworkVariables() {
             health = PlayerSoldier.localPlayer.health;
+            // PlayerSoldier.localPlayer.takenDamageThisTick = takenDamageThisTick;
+            // PlayerSoldier.localPlayer.damage = damage;
         }
-
 
         private void Tick() {
             PlayerSoldier.localPlayer.TakeDamage(PlayerSoldier.localPlayer.takenDamageThisTick);
@@ -117,13 +111,13 @@ namespace PlayerScripts {
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
             if (stream.IsWriting) {
                 stream.SendNext(health);
-                stream.SendNext(takenDamageThisTick);
-                stream.SendNext(damage);
+                // stream.SendNext(takenDamageThisTick);
+                // stream.SendNext(damage);
             }
             else {
                 this.health = (float) stream.ReceiveNext();
-                this.takenDamageThisTick = (float) stream.ReceiveNext();
-                this.damage = (float) stream.ReceiveNext();
+                // this.takenDamageThisTick = (float) stream.ReceiveNext();
+                // this.damage = (float) stream.ReceiveNext();
             }
         }
 
