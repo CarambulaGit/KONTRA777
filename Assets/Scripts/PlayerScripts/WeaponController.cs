@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace PlayerScripts {
     public class WeaponController : MonoBehaviour {
+        public PlayerController PlayerController;
         public Transform firePoint;
         public LineRenderer lineRenderer;
         private PhotonView photonView;
@@ -14,6 +15,7 @@ namespace PlayerScripts {
 
         void Update() {
             if (!photonView.IsMine) return;
+            if (PlayerController.isDead) return;
             if (Input.GetButtonDown("Fire1")) Shoot();
         }
 
