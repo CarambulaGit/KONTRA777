@@ -227,10 +227,40 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1133879248309400096, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+        type: 3}
+      propertyPath: m_TagString
+      value: Box
+      objectReference: {fileID: 0}
+    - target: {fileID: 1575635218191847301, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+        type: 3}
+      propertyPath: m_TagString
+      value: Box
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592049334818675452, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+        type: 3}
+      propertyPath: m_TagString
+      value: Box
+      objectReference: {fileID: 0}
     - target: {fileID: 5096172855500864501, guid: b17ea9bdee0800145ba98b0be3aa7d13,
         type: 3}
       propertyPath: m_Name
       value: TestMap
+      objectReference: {fileID: 0}
+    - target: {fileID: 5096172855500864501, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 6873472325728368425, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+        type: 3}
+      propertyPath: m_TagString
+      value: Box
+      objectReference: {fileID: 0}
+    - target: {fileID: 7095470594182952566, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+        type: 3}
+      propertyPath: m_TagString
+      value: Box
       objectReference: {fileID: 0}
     - target: {fileID: 7197232685800632054, guid: b17ea9bdee0800145ba98b0be3aa7d13,
         type: 3}
@@ -286,6 +316,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7951074307388551716, guid: b17ea9bdee0800145ba98b0be3aa7d13,
+        type: 3}
+      propertyPath: m_TagString
+      value: Box
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b17ea9bdee0800145ba98b0be3aa7d13, type: 3}
@@ -424,7 +459,7 @@ GameObject:
   - component: {fileID: 1143153180}
   m_Layer: 0
   m_Name: Game Manager
-  m_TagString: Untagged
+  m_TagString: GameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
