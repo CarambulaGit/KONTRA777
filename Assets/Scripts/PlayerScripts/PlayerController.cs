@@ -5,6 +5,7 @@ using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using Resources.Classes;
 using ServerScripts;
+using TMPro;
 using Unity.Collections;
 using UnityEngine;
 
@@ -14,19 +15,21 @@ namespace PlayerScripts {
         public BoxCollider2D collider;
         public float moveSpeed;
         public Animator animator;
+        public TextMeshPro NicknameText;
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
         private bool init;
-        [ReadOnly] private float health;
-        [ReadOnly] private float takenDamageThisTick;
-        [ReadOnly] private float damage;
+        [SerializeField] private float health;
+        [SerializeField] private float takenDamageThisTick;
+        private float damage;
 
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
             photonView = GetComponent<PhotonView>();
             health = PlayerSoldier.defaultHealth;
+            NicknameText.SetText(photonView.Owner.NickName);
         }
 
         void FixedUpdate() {
@@ -36,9 +39,8 @@ namespace PlayerScripts {
             }
 
             if (!photonView.IsMine) return;
-           
-           // Debug.Log(PlayerSoldier.players.ToArray().ToStringFull());
-            SynchronizeNetworkVariables();
+
+            SynchronizeNetworkVariablesInput();
             if (isDead) return;
             isDead = PlayerSoldier.localPlayer.IsDead();
             if (isDead) {
@@ -49,19 +51,25 @@ namespace PlayerScripts {
             Tick();
             Move(out moveAnimSpeed);
             Animate();
-            health = PlayerSoldier.localPlayer.health;
+            SynchronizeNetworkVariablesOutput();
+            // Debug.Log(PlayerSoldier.players.ToArray().ToStringFull());
             // PhotonView.Find()
         }
 
-        private void SynchronizeNetworkVariables() {
+        private void SynchronizeNetworkVariablesInput() {
             PlayerSoldier.localPlayer.health = health;
             PlayerSoldier.localPlayer.takenDamageThisTick = takenDamageThisTick;
             PlayerSoldier.localPlayer.damage = damage;
         }
 
+        private void SynchronizeNetworkVariablesOutput() {
+            health = PlayerSoldier.localPlayer.health;
+        }
+
 
         private void Tick() {
             PlayerSoldier.localPlayer.TakeDamage(PlayerSoldier.localPlayer.takenDamageThisTick);
+            PlayerSoldier.localPlayer.TakeDamage(0.05f);
         }
 
         private void Kill() {
