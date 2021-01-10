@@ -6,12 +6,11 @@ namespace PlayerScripts
 {
 	public class LookAtMouse : MonoBehaviour {
 		public PlayerController PlayerController;
-		private PhotonView photonView;
+		public PhotonView photonView;
 		private Camera playerCamera;
 		public Transform rotationPoint;
 
 		void Start() {
-			photonView = GetComponent<PhotonView>();
 			playerCamera = GameObject.FindGameObjectWithTag(CameraController.playerCameraTag).GetComponent<Camera>();
 		}
 

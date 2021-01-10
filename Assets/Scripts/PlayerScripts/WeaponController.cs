@@ -7,11 +7,9 @@ namespace PlayerScripts {
         public PlayerController PlayerController;
         public Transform firePoint;
         public LineRenderer lineRenderer;
-        private PhotonView photonView;
+        public PhotonView photonView;
 
-        void Start() {
-            photonView = GetComponent<PhotonView>();
-        }
+        void Start() { }
 
         void Update() {
             if (!photonView.IsMine) return;
