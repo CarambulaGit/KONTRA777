@@ -5,6 +5,7 @@ using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using Resources.Classes;
 using ServerScripts;
+using TMPro;
 using Unity.Collections;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace PlayerScripts {
         public BoxCollider2D collider;
         public float moveSpeed;
         public Animator animator;
+        public TextMeshPro NicknameText;
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
@@ -27,6 +29,7 @@ namespace PlayerScripts {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
             photonView = GetComponent<PhotonView>();
             health = PlayerSoldier.defaultHealth;
+            NicknameText.SetText(PhotonNetwork.NickName);
         }
 
         void FixedUpdate() {
