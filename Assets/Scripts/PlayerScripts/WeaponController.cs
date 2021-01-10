@@ -24,7 +24,7 @@ namespace PlayerScripts {
             PhotonView hittedPlayerPV;
             if (hitInfo.transform.TryGetComponent<PhotonView>(out hittedPlayerPV)) {
                 //TODO take some damage
-                photonView.RPC(nameof(GiveDamageRPC),RpcTarget.AllBuffered, PlayerSoldier.localPlayer.damage, hittedPlayerPV.ViewID);
+                photonView.RPC(nameof(GiveDamageRPC),RpcTarget.All, PlayerSoldier.localPlayer.damage, hittedPlayerPV.ViewID);
             }
 
             return hitInfo;
