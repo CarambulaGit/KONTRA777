@@ -16,7 +16,7 @@ namespace Resources.Classes {
         public string nickname { get; set; }
         private Player photonPlayer;
         private PhotonTeam team;
-        private GameObject gOPlayer;
+        public GameObject gOPlayer;
 
         public static PlayerSoldier FindPSByPhotonPlayer(Player player) {
             return players.First(somePlayer => somePlayer.photonPlayer.Equals(player));
@@ -50,7 +50,7 @@ namespace Resources.Classes {
         public void Kill() => this.health = 0;
 
         public void TakeDamage(float damage) {
-            this.health -= damage;
+            this.health = Mathf.Clamp(health - damage, 0, defaultHealth); // todo add field MAX_HEALTH
         }
 
         public override string ToString() {
