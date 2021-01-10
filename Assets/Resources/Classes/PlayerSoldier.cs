@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Resources.Classes {
         private Player photonPlayer;
         private PhotonTeam team;
         public GameObject gOPlayer;
+        public PhotonView photonView;
 
         public static PlayerSoldier FindPSByPhotonPlayer(Player player) {
             return players.First(somePlayer => somePlayer.photonPlayer.Equals(player));
@@ -37,6 +39,7 @@ namespace Resources.Classes {
             this.damage = damage;
             this.gOPlayer = gOPlayer;
             this.health = health;
+            this.photonView = this.gOPlayer.GetPhotonView();
             players.Add(this);
         }
 
