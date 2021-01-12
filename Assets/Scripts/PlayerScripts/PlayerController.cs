@@ -57,7 +57,7 @@ namespace PlayerScripts {
         }
 
         private void Kill() {
-            collider.enabled = false;
+            photonView.RPC(nameof(DisableColliderRPC),RpcTarget.AllBuffered, photonView.ViewID);
             health = PlayerSoldier.localPlayer.health;
             moveAnimSpeed = 0;
             Animate();
@@ -106,5 +106,16 @@ namespace PlayerScripts {
                 this.health = (float) stream.ReceiveNext();
             }
         }
+
+        void OnCollisionEnter2D(Collision2D other) {
+            }
+
+
+        [PunRPC]
+        void DisableColliderRPC(int viewId) {
+            if (photonView.ViewID == viewId) {
+                collider.enabled = false;
+            }
         }
+    }
 }
