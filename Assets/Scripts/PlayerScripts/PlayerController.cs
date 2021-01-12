@@ -104,12 +104,5 @@ namespace PlayerScripts {
                 this.health = (float) stream.ReceiveNext();
             }
         }
-
-        void OnCollisionEnter2D(Collision2D other) {
-            if (other.gameObject.tag.Equals("Box")) {
-                PlayerSoldier.localPlayer.Kill();
-                Kill();
-            }
         }
-    }
 }
