@@ -19,6 +19,7 @@ namespace PlayerScripts {
         public float moveSpeed;
         public Animator animator;
         public TextMeshPro NicknameText;
+        public SpriteRenderer sprite;
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
@@ -57,7 +58,7 @@ namespace PlayerScripts {
         }
 
         private void Kill() {
-            photonView.RPC(nameof(DisableColliderRPC),RpcTarget.AllBuffered, photonView.ViewID);
+            photonView.RPC(nameof(KillRPC),RpcTarget.AllBuffered, photonView.ViewID);
             health = PlayerSoldier.localPlayer.health;
             moveAnimSpeed = 0;
             Animate();
@@ -112,9 +113,10 @@ namespace PlayerScripts {
 
 
         [PunRPC]
-        void DisableColliderRPC(int viewId) {
+        void KillRPC(int viewId) {
             if (photonView.ViewID == viewId) {
                 collider.enabled = false;
+                sprite.sortingOrder = 1;
             }
         }
     }
