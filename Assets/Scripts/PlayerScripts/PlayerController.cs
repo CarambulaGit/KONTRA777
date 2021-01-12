@@ -57,7 +57,7 @@ namespace PlayerScripts {
         }
 
         private void Kill() {
-            collider.enabled = false;
+            photonView.RPC(nameof(DisableColliderRPC),RpcTarget.AllBuffered, photonView.ViewID);
             health = PlayerSoldier.localPlayer.health;
             moveAnimSpeed = 0;
             Animate();
@@ -111,6 +111,13 @@ namespace PlayerScripts {
             if (other.gameObject.tag.Equals("Box")) {
                 PlayerSoldier.localPlayer.Kill();
                 Kill();
+            }
+        }
+
+        [PunRPC]
+        void DisableColliderRPC(int viewId) {
+            if (photonView.ViewID == viewId) {
+                collider.enabled = false;
             }
         }
     }
