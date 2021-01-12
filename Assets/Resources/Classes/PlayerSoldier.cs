@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace Resources.Classes {
     public class PlayerSoldier {
-        public static float defaultHealth = 100;
         public static List<PlayerSoldier> players = new List<PlayerSoldier>();
         public static PlayerSoldier localPlayer;
         public float health;
-        public float damage;
+        public Soldier soldier;
+        public Weapon weapon;
         public string nickname { get; set; }
         private Player photonPlayer;
         private PhotonTeam team;
@@ -31,27 +31,23 @@ namespace Resources.Classes {
             return players.First(somePlayer => somePlayer.nickname.Equals(nickname));
         }
 
-        private PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, float damage, GameObject gOPlayer,
-            float health) {
+        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier, GameObject gOPlayer) {
             this.photonPlayer = photonPlayer;
             this.nickname = nickname;
             this.team = team;
-            this.damage = damage;
+            this.weapon = weapon;
             this.gOPlayer = gOPlayer;
-            this.health = health;
+            this.soldier = soldier;
+            this.health = soldier.health;
             this.photonView = this.gOPlayer.GetPhotonView();
             players.Add(this);
-        }
-
-        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, float damage, GameObject gOPlayer) :
-            this(photonPlayer, nickname, team, damage, gOPlayer, defaultHealth) {
         }
 
         public bool IsDead() => this.health <= 0;
         public void Kill() => this.health = 0;
 
         public void TakeDamage(float damage) {
-            this.health = Mathf.Clamp(health - damage, 0, defaultHealth); // todo add field MAX_HEALTH
+            this.health = Mathf.Clamp(health - damage, 0, soldier.health); 
         }
 
         public override string ToString() {

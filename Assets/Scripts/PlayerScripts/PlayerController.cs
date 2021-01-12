@@ -3,6 +3,7 @@ using System.Linq;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using Resources;
 using Resources.Classes;
 using ServerScripts;
 using TMPro;
@@ -13,6 +14,8 @@ namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
         private const float EPSILON = 0.00001f;
         public BoxCollider2D collider;
+        public Weapon weapon;
+        public Soldier soldier;
         public float moveSpeed;
         public Animator animator;
         public TextMeshPro NicknameText;
@@ -22,7 +25,6 @@ namespace PlayerScripts {
         private float moveAnimSpeed;
         private bool init;
         [SerializeField] private float health;
-        private float damage;
 
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
@@ -87,7 +89,7 @@ namespace PlayerScripts {
 
         private PlayerSoldier initPlayerSoldier() {
             var player = new PlayerSoldier(photonView.Owner, photonView.Owner.NickName,
-                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), 10, gameObject);
+                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), weapon, soldier, gameObject);
             if (photonView.IsMine) {
                 PlayerSoldier.localPlayer = player;
             }

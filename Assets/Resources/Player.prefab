@@ -319,6 +319,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider: {fileID: 1096449434158617960}
+  weapon: {fileID: 11400000, guid: 49c6a2c1719bee84582e3e15716bf130, type: 2}
+  soldier: {fileID: 11400000, guid: 157333b3708c03343b24a5a7d7063cfa, type: 2}
   moveSpeed: 6
   animator: {fileID: 2035651316840139865}
   NicknameText: {fileID: 2775253944238180557}

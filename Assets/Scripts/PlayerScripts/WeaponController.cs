@@ -23,7 +23,7 @@ namespace PlayerScripts {
             StartCoroutine(AnimateShoot(hitInfo));
             PhotonView hittedPlayerPV;
             if (hitInfo.transform.TryGetComponent<PhotonView>(out hittedPlayerPV)) {
-                photonView.RPC(nameof(GiveDamageRPC),RpcTarget.All, PlayerSoldier.localPlayer.damage, hittedPlayerPV.ViewID);
+                photonView.RPC(nameof(GiveDamageRPC),RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage, hittedPlayerPV.ViewID);
             }
 
             return hitInfo;
