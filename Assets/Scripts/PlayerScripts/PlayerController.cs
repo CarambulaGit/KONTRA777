@@ -25,10 +25,12 @@ namespace PlayerScripts {
         private PhotonView photonView;
         private float moveAnimSpeed;
         private bool init;
+        private InGameCanvasController canvasController;
         [SerializeField] private float health;
 
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
+            canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
         }
@@ -38,6 +40,8 @@ namespace PlayerScripts {
                 initPlayerSoldier();
                 init = true;
             }
+
+            if (!canvasController.isReady) return;
 
             if (!photonView.IsMine) return;
 
@@ -58,7 +62,7 @@ namespace PlayerScripts {
         }
 
         private void Kill() {
-            photonView.RPC(nameof(KillRPC),RpcTarget.AllBuffered, photonView.ViewID);
+            photonView.RPC(nameof(KillRPC), RpcTarget.AllBuffered, photonView.ViewID);
             health = PlayerSoldier.localPlayer.health;
             moveAnimSpeed = 0;
             Animate();
@@ -108,8 +112,7 @@ namespace PlayerScripts {
             }
         }
 
-        void OnCollisionEnter2D(Collision2D other) {
-            }
+        void OnCollisionEnter2D(Collision2D other) { }
 
 
         [PunRPC]

@@ -324,6 +324,7 @@ MonoBehaviour:
   moveSpeed: 6
   animator: {fileID: 2035651316840139865}
   NicknameText: {fileID: 2775253944238180557}
+  sprite: {fileID: 4047004921586272281}
   health: 0
 --- !u!114 &4001391294939030087
 MonoBehaviour:
