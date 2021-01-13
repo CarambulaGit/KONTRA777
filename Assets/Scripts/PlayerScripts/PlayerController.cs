@@ -122,5 +122,15 @@ namespace PlayerScripts {
                 sprite.sortingOrder = 1;
             }
         }
+        
+        [PunRPC]
+        private void StartGameRPC() {
+            canvasController.isReady = true;
+            canvasController.canvasStatus = canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu ? 0 : canvasController.canvasStatus;
+            canvasController.OnChangedCanvasStatus();
+        }
+        public void OnStartGame() {
+            photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
+        }
     }
 }

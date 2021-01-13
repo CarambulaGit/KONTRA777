@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using PlayerScripts;
 using Resources.Classes;
 using UnityEngine;
 
@@ -10,19 +11,12 @@ public class InGameCanvasController : MonoBehaviour {
         EscMenu = 2
     }
 
-    public bool isReady { get; private set; }
+    public bool isReady { get; set; }
     public GameObject startGameMenu;
     public GameObject sGMHost;
     public GameObject sGMOthers;
     public GameObject escMenu;
-    private CanvasStatus canvasStatus;
-
-    [PunRPC]
-    private void StartGameRPC() {
-        isReady = true;
-        canvasStatus = canvasStatus == CanvasStatus.StartGameMenu ? 0 : canvasStatus;
-        OnChangedCanvasStatus();
-    }
+    public CanvasStatus canvasStatus;
 
     void Start() {
         canvasStatus = CanvasStatus.StartGameMenu;
@@ -37,7 +31,7 @@ public class InGameCanvasController : MonoBehaviour {
         }
     }
 
-    void OnChangedCanvasStatus() {
+    public void OnChangedCanvasStatus() {
         startGameMenu.SetActive(canvasStatus == CanvasStatus.StartGameMenu);
         escMenu.SetActive(canvasStatus == CanvasStatus.EscMenu);
     }
@@ -47,7 +41,7 @@ public class InGameCanvasController : MonoBehaviour {
     }
 
     public void OnStartGame() {
-        PlayerSoldier.localPlayer.photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().OnStartGame();
     }
 
     private void SetNecessaryStartGameMenu() {
