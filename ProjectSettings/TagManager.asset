@@ -8,6 +8,7 @@ TagManager:
   - Dange
   - Box
   - GameManager
+  - InGameCanvas
   layers:
   - Default
   - TransparentFX

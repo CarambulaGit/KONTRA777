@@ -31,6 +31,10 @@ namespace Resources.Classes {
             return players.First(somePlayer => somePlayer.nickname.Equals(nickname));
         }
 
+        public static List<PlayerSoldier> GetAllPSByTeam(PhotonTeam team) {
+            return players.FindAll(somePlayer => somePlayer.team.Equals(team));
+        }
+
         public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier, GameObject gOPlayer) {
             this.photonPlayer = photonPlayer;
             this.nickname = nickname;
