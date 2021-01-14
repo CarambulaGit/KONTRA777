@@ -9,6 +9,8 @@ using ServerScripts;
 using TMPro;
 using Unity.Collections;
 using UnityEngine;
+using System.IO;
+using UnityEditor;
 
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
@@ -19,17 +21,22 @@ namespace PlayerScripts {
         public float moveSpeed;
         public Animator animator;
         public TextMeshPro NicknameText;
+        public SpriteRenderer sprite;
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
         private bool init;
+        private InGameCanvasController canvasController;
         [SerializeField] private float health;
+
 
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
+            canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
+        
         }
 
         void FixedUpdate() {
@@ -37,6 +44,8 @@ namespace PlayerScripts {
                 initPlayerSoldier();
                 init = true;
             }
+
+            if (!canvasController.isReady) return;
 
             if (!photonView.IsMine) return;
 
@@ -57,7 +66,7 @@ namespace PlayerScripts {
         }
 
         private void Kill() {
-            photonView.RPC(nameof(DisableColliderRPC),RpcTarget.AllBuffered, photonView.ViewID);
+            photonView.RPC(nameof(KillRPC), RpcTarget.AllBuffered, photonView.ViewID);
             health = PlayerSoldier.localPlayer.health;
             moveAnimSpeed = 0;
             Animate();
@@ -107,15 +116,31 @@ namespace PlayerScripts {
             }
         }
 
-        void OnCollisionEnter2D(Collision2D other) {
-            }
+        void OnCollisionEnter2D(Collision2D other) { }
 
 
         [PunRPC]
-        void DisableColliderRPC(int viewId) {
+        void KillRPC(int viewId) {
             if (photonView.ViewID == viewId) {
                 collider.enabled = false;
+                sprite.sortingOrder = 1;
             }
         }
+
+        // InGameCanvasController start
+
+        [PunRPC]
+        private void StartGameRPC() {
+            canvasController.isReady = true;
+            canvasController.canvasStatus = canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu ? 0 : canvasController.canvasStatus;
+            canvasController.OnChangedCanvasStatus();
+        }
+
+        public void OnStartGame() {
+            photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
+        }
+
+        // InGameCanvasController end  
+        
     }
 }

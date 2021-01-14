@@ -9,31 +9,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ServerScripts {
+    
     public class InGameManager : MonoBehaviourPunCallbacks {
-        public GameObject canvas;
         public GameObject playerPrefab;
         public PhotonTeamsManager ptm;
         public Transform[] SpawnPoints;
+        public RoundManager roundManager;
         private bool init;
-        private bool canvasActive;
         private GameObject localPlayer;
 
-
-        void Start() {
-            canvas.SetActive(canvasActive);
-        }
+        void Start() { }
 
         void Update() {
             if (!init) {
                 localPlayer = AddNewPlayer();
                 init = true;
             }
-
-            if (!Input.GetKeyDown(KeyCode.Escape)) return;
-            canvasActive = !canvasActive;
-            canvas.SetActive(canvasActive);
         }
-
 
         private GameObject AddNewPlayer() {
             var teamsList = ptm.GetAvailableTeams().ToList();
@@ -42,10 +34,6 @@ namespace ServerScripts {
             PhotonNetwork.LocalPlayer.JoinTeam(myTeam);
             return PhotonNetwork.Instantiate(playerPrefab.name,
                 SpawnPoints[myTeam.Code - 1].position, Quaternion.identity);
-        }
-
-        public void Leave() {
-            PhotonNetwork.LeaveRoom();
         }
 
         public override void OnLeftRoom() {
@@ -59,7 +47,6 @@ namespace ServerScripts {
         public override void OnJoinedRoom() { }
 
         public override void OnPlayerLeftRoom(Player otherPlayer) {
-            // todo update PlayerSoldier.players
             PlayerSoldier.players.Remove(PlayerSoldier.FindPSByPhotonPlayer(otherPlayer));
             Debug.Log($"{otherPlayer.NickName} left room");
         }
