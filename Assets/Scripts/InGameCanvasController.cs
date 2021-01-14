@@ -32,7 +32,8 @@ public class InGameCanvasController : MonoBehaviour {
     }
 
     public void OnChangedCanvasStatus() {
-        startGameMenu.SetActive(canvasStatus == CanvasStatus.StartGameMenu);
+        // startGameMenu.SetActive(canvasStatus == CanvasStatus.StartGameMenu);
+        startGameMenu.SetActive(false); // todo
         escMenu.SetActive(canvasStatus == CanvasStatus.EscMenu);
     }
 
