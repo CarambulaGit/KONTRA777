@@ -45,7 +45,7 @@ namespace PlayerScripts {
                 init = true;
             }
 
-            if (!canvasController.isReady) return;
+            // if (!canvasController.isReady) return;
 
             if (!photonView.IsMine) return;
 
