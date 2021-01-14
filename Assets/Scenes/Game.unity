@@ -238,6 +238,7 @@ MonoBehaviour:
   sGMHost: {fileID: 2035697785}
   sGMOthers: {fileID: 472816997}
   escMenu: {fileID: 1381249749}
+  canvasStatus: 0
 --- !u!1001 &88693856
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -706,6 +707,7 @@ GameObject:
   - component: {fileID: 1143153179}
   - component: {fileID: 1143153178}
   - component: {fileID: 1143153180}
+  - component: {fileID: 1143153181}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: GameManager
@@ -731,6 +733,7 @@ MonoBehaviour:
   SpawnPoints:
   - {fileID: 88693859}
   - {fileID: 88693860}
+  roundManager: {fileID: 0}
 --- !u!4 &1143153179
 Transform:
   m_ObjectHideFlags: 0
@@ -763,6 +766,18 @@ MonoBehaviour:
     Code: 1
   - Name: Red
     Code: 2
+--- !u!114 &1143153181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1143153177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1f05de4ebdb1c4084c4147d14e4688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1381249749
 GameObject:
   m_ObjectHideFlags: 0
