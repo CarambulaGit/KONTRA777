@@ -1,17 +1,25 @@
-﻿using Photon.Pun;
+﻿using System.IO;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ServerScripts
 {
 	public class LobbyManager : MonoBehaviourPunCallbacks {
-		public Text InputField;
+		public Text nicknameInputField;
 		public Text logText;
 		public string roomName = "default";
+		private string path = "Assets/Resources/Nickname.txt";
+
 		[Range(1, 8)] public int numOfPlayers = 4;
 
+		public override void OnEnable() {
+			base.OnEnable();
+			nicknameInputField.text = LoadNickname();
+			PhotonNetwork.NickName = nicknameInputField.text;
+		}
+
 		void Start() {
-			PhotonNetwork.NickName = "Unnamed";
 			PhotonNetwork.GameVersion = "1";
 			PhotonNetwork.AutomaticallySyncScene = true;
 			PhotonNetwork.ConnectUsingSettings();
@@ -22,12 +30,18 @@ namespace ServerScripts
 		public override void OnConnectedToMaster() { Log("Connected to Master"); }
 
 		public void CreateRoom() {
-			PhotonNetwork.NickName = InputField.text;
+			if (nicknameInputField.text != "") {
+				SaveNickname(nicknameInputField.text);
+			}
+			PhotonNetwork.NickName = LoadNickname();
 			PhotonNetwork.CreateRoom(roomName, new Photon.Realtime.RoomOptions {MaxPlayers = (byte) numOfPlayers});
 		}
 
 		public void JoinRoom() {
-			PhotonNetwork.NickName = InputField.text;
+			if (nicknameInputField.text != "") {
+				SaveNickname(nicknameInputField.text);
+			}
+			PhotonNetwork.NickName = LoadNickname();
 			PhotonNetwork.JoinRoom(roomName);
 		}
 
@@ -37,5 +51,22 @@ namespace ServerScripts
 		}
 
 		void Update() { }
+		
+		
+		void SaveNickname(string nickname) {
+			using (StreamWriter sw = File.CreateText(path)) {
+				sw.WriteLine(nickname);
+			}
+		}
+
+		string LoadNickname() {
+			if (!File.Exists(path)) {
+				SaveNickname("");
+			}
+			using (StreamReader sr = File.OpenText(path)) {
+				var text = sr.ReadToEnd();	
+				return text;
+			}
+		}
 	}
 }

@@ -9,6 +9,8 @@ using ServerScripts;
 using TMPro;
 using Unity.Collections;
 using UnityEngine;
+using System.IO;
+using UnityEditor;
 
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
@@ -28,11 +30,13 @@ namespace PlayerScripts {
         private InGameCanvasController canvasController;
         [SerializeField] private float health;
 
+
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
+        
         }
 
         void FixedUpdate() {
@@ -122,15 +126,21 @@ namespace PlayerScripts {
                 sprite.sortingOrder = 1;
             }
         }
-        
+
+        // InGameCanvasController start
+
         [PunRPC]
         private void StartGameRPC() {
             canvasController.isReady = true;
             canvasController.canvasStatus = canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu ? 0 : canvasController.canvasStatus;
             canvasController.OnChangedCanvasStatus();
         }
+
         public void OnStartGame() {
             photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
         }
+
+        // InGameCanvasController end  
+        
     }
 }
