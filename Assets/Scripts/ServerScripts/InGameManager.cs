@@ -9,15 +9,21 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ServerScripts {
+    
     public class InGameManager : MonoBehaviourPunCallbacks {
         public GameObject playerPrefab;
         public PhotonTeamsManager ptm;
         public Transform[] SpawnPoints;
+        public RoundManager roundManager;
         private bool init;
         private GameObject localPlayer;
 
 
+
+
+
         void Start() { }
+
 
         void Update() {
             if (!init) {

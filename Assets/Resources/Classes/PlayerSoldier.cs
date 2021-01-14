@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Photon.Pun;
@@ -33,6 +34,14 @@ namespace Resources.Classes {
 
         public static List<PlayerSoldier> GetAllPSByTeam(PhotonTeam team) {
             return players.FindAll(somePlayer => somePlayer.team.Equals(team));
+        }
+
+        public static bool PlayersIsDead(List<PlayerSoldier> players) {
+           return players.All(somePlayer => somePlayer.IsDead());
+        }
+
+        public static bool TeamIsDead(PhotonTeam team) {
+            return PlayersIsDead(GetAllPSByTeam(team));
         }
 
         public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier, GameObject gOPlayer) {
