@@ -1408,7 +1408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744f91c7c1978e048aa549a3ecb80837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nicknameInputField: {fileID: 1593730996}
+  nicknameInputField: {fileID: 1602372438}
   logText: {fileID: 180824342}
   roomName: default
   numOfPlayers: 8

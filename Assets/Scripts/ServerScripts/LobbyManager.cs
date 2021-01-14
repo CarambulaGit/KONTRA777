@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace ServerScripts
 {
 	public class LobbyManager : MonoBehaviourPunCallbacks {
-		public Text nicknameInputField;
+		public InputField nicknameInputField;
 		public Text logText;
 		public string roomName = "default";
 		private string path = "Assets/Resources/Nickname.txt";
@@ -16,10 +16,10 @@ namespace ServerScripts
 		public override void OnEnable() {
 			base.OnEnable();
 			nicknameInputField.text = LoadNickname();
-			PhotonNetwork.NickName = nicknameInputField.text;
 		}
 
 		void Start() {
+			PhotonNetwork.NickName = nicknameInputField.text;
 			PhotonNetwork.GameVersion = "1";
 			PhotonNetwork.AutomaticallySyncScene = true;
 			PhotonNetwork.ConnectUsingSettings();
@@ -30,17 +30,13 @@ namespace ServerScripts
 		public override void OnConnectedToMaster() { Log("Connected to Master"); }
 
 		public void CreateRoom() {
-			if (nicknameInputField.text != "") {
-				SaveNickname(nicknameInputField.text);
-			}
+			SaveNickname(nicknameInputField.text);
 			PhotonNetwork.NickName = LoadNickname();
 			PhotonNetwork.CreateRoom(roomName, new Photon.Realtime.RoomOptions {MaxPlayers = (byte) numOfPlayers});
 		}
 
 		public void JoinRoom() {
-			if (nicknameInputField.text != "") {
-				SaveNickname(nicknameInputField.text);
-			}
+			SaveNickname(nicknameInputField.text);
 			PhotonNetwork.NickName = LoadNickname();
 			PhotonNetwork.JoinRoom(roomName);
 		}
