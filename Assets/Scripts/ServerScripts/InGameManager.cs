@@ -18,12 +18,7 @@ namespace ServerScripts {
         private bool init;
         private GameObject localPlayer;
 
-
-
-
-
         void Start() { }
-
 
         void Update() {
             if (!init) {
@@ -31,7 +26,6 @@ namespace ServerScripts {
                 init = true;
             }
         }
-
 
         private GameObject AddNewPlayer() {
             var teamsList = ptm.GetAvailableTeams().ToList();
