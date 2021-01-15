@@ -32,6 +32,10 @@ namespace Resources.Classes {
             return players.First(somePlayer => somePlayer.nickname.Equals(nickname));
         }
 
+        public static PlayerSoldier FindPSByPhotonView(PhotonView pv) {
+            return players.First(somePlayer => somePlayer.photonView.ViewID == pv.ViewID);
+        }
+
         public static List<PlayerSoldier> GetAllPSByTeam(PhotonTeam team) {
             return players.FindAll(somePlayer => somePlayer.team.Equals(team));
         }
