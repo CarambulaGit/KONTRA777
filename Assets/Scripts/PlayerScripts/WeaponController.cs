@@ -16,7 +16,7 @@ namespace PlayerScripts {
         }
 
         void Update() {
-            if (!canvasController.isReady) return;
+            // if (!canvasController.isReady) return;
             if (!photonView.IsMine) return;
             if (PlayerController.isDead) return;
             if (Input.GetButtonDown("Fire1")) Shoot();
