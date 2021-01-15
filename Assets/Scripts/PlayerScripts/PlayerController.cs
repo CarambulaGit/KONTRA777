@@ -36,7 +36,6 @@ namespace PlayerScripts {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
-        
         }
 
         void FixedUpdate() {
@@ -46,10 +45,10 @@ namespace PlayerScripts {
             }
 
             // if (!canvasController.isReady) return;
+            SynchronizeNetworkVariables();
 
             if (!photonView.IsMine) return;
 
-            SynchronizeNetworkVariables();
             if (isDead) return;
             isDead = PlayerSoldier.localPlayer.IsDead();
             if (isDead) {
@@ -62,7 +61,12 @@ namespace PlayerScripts {
         }
 
         private void SynchronizeNetworkVariables() {
-            health = PlayerSoldier.localPlayer.health;
+            if (photonView.IsMine) {
+                health = PlayerSoldier.localPlayer.health;
+            }
+            else {
+                PlayerSoldier.FindPSByPhotonView(photonView).health = health;
+            }
         }
 
         private void Kill() {
@@ -132,7 +136,10 @@ namespace PlayerScripts {
         [PunRPC]
         private void StartGameRPC() {
             canvasController.isReady = true;
-            canvasController.canvasStatus = canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu ? 0 : canvasController.canvasStatus;
+            canvasController.canvasStatus =
+                canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu
+                    ? 0
+                    : canvasController.canvasStatus;
             canvasController.OnChangedCanvasStatus();
         }
 
@@ -141,6 +148,5 @@ namespace PlayerScripts {
         }
 
         // InGameCanvasController end  
-        
     }
 }

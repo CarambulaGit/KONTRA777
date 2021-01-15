@@ -19,7 +19,6 @@ public class RoundManager : MonoBehaviour {
         foreach (var teamID in teamsIsAlive.Keys.ToList()) {
             ptm.TryGetTeamByCode(teamID, out var team);
             if (PlayerSoldier.GetAllPSByTeam(team).Count == 0) return;
-            Debug.Log($"team = {team.Name}, TeamIsDead = {PlayerSoldier.TeamIsDead(team)}, members = {PlayerSoldier.GetAllPSByTeam(team)[0]}");
             if (PlayerSoldier.TeamIsDead(team)) {
                 teamsIsAlive[teamID] = false;
                 Debug.Log($"{team.Name} team is lose");
