@@ -38,7 +38,7 @@ public class InGameCanvasController : MonoBehaviour {
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            canvasStatus = CanvasStatus.EscMenu;
+            canvasStatus = canvasStatus == CanvasStatus.EscMenu ? 0 : CanvasStatus.EscMenu;
             OnChangedCanvasStatus();
         }
 
