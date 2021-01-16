@@ -9,10 +9,14 @@ namespace PlayerScripts {
         public Transform firePoint;
         public LineRenderer lineRenderer;
         public PhotonView photonView;
+        public AudioClip shootSound;
         private InGameCanvasController canvasController;
+
+        AudioSource audio;
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
+            audio = GetComponent<AudioSource>();
         }
 
         void Update() {
@@ -30,6 +34,7 @@ namespace PlayerScripts {
                 photonView.RPC(nameof(GiveDamageRPC), RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage,
                     hittedPlayerPV.ViewID);
             }
+            audio.PlayOneShot(shootSound);
 
             return hitInfo;
         }
