@@ -12,7 +12,7 @@ namespace PlayerScripts {
         public AudioClip shootSound;
         private InGameCanvasController canvasController;
 
-        AudioSource audio;
+        private AudioSource audio;
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
@@ -28,35 +28,42 @@ namespace PlayerScripts {
 
         bool Shoot() {
             var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
-            StartCoroutine(AnimateShoot(hitInfo));
-            PhotonView hittedPlayerPV;
-            if (hitInfo.transform.TryGetComponent<PhotonView>(out hittedPlayerPV)) {
+            photonView.RPC(nameof(ShootRPC), RpcTarget.All, PlayerSoldier.localPlayer.photonView.ViewID,
+                firePoint.position, hitInfo ? hitInfo.transform.position : firePoint.position + firePoint.up * 100);
+            if (hitInfo.transform.TryGetComponent<PhotonView>(out var hittedPlayerPV)) {
                 photonView.RPC(nameof(GiveDamageRPC), RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage,
-                    hittedPlayerPV.ViewID);
+                    hittedPlayerPV.ViewID, PlayerSoldier.localPlayer.photonView.ViewID);
             }
-            audio.PlayOneShot(shootSound);
 
             return hitInfo;
         }
 
         [PunRPC]
-        private void GiveDamageRPC(float damage, int viewId) {
-            if (PlayerSoldier.localPlayer.photonView.ViewID != viewId) return;
-            Debug.Log($"Auch! Taken {damage} damage");
-            PlayerSoldier.localPlayer.TakeDamage(damage);
+        private void GiveDamageRPC(float damage, int viewIdBeenDamaged, int viewIdWhoShooted) {
+            if (PlayerSoldier.localPlayer.photonView.ViewID == viewIdBeenDamaged) {
+                Debug.Log($"Auch! Taken {damage} damage");
+                PlayerSoldier.localPlayer.TakeDamage(damage);
+            }
         }
 
-        IEnumerator AnimateShoot(RaycastHit2D hitInfo) {
-            if (hitInfo) {
-                lineRenderer.SetPosition(0, firePoint.position);
-                lineRenderer.SetPosition(1, hitInfo.transform.position);
-                // Debug.Log($"Hit {hitInfo.transform.name}");
+        [PunRPC]
+        private void ShootRPC(int viewIdWhoShooted, Vector3 startPos, Vector3 finishPos) {
+            if (photonView.ViewID == viewIdWhoShooted) {
+                StartCoroutine(AnimateShoot(startPos, finishPos));
+                audio.PlayOneShot(shootSound);
+                Debug.Log($"Pif paf oyoyoy");
             }
-            else {
-                lineRenderer.SetPosition(0, firePoint.position);
-                lineRenderer.SetPosition(1, firePoint.position + firePoint.up * 100);
-            }
+        }
 
+        // IEnumerator AnimateShoot(RaycastHit2D hitInfo) {
+        IEnumerator AnimateShoot(Vector3 startPos, Vector3 finishPos) {
+            // lineRenderer.SetPosition(0, firePoint.position);
+            // lineRenderer.SetPosition(1, hitInfo.transform.position);
+            // // Debug.Log($"Hit {hitInfo.transform.name}");
+            // lineRenderer.SetPosition(0, firePoint.position);
+            // lineRenderer.SetPosition(1, firePoint.position + firePoint.up * 100);
+            lineRenderer.SetPosition(0, startPos);
+            lineRenderer.SetPosition(1, finishPos);
             lineRenderer.enabled = true;
             yield return new WaitForSeconds(0.02f);
             lineRenderer.enabled = false;
