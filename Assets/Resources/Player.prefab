@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4789105459695510044}
-  - component: {fileID: 1096449434158617960}
+  - component: {fileID: 146153868253066236}
   - component: {fileID: -2000073802065362604}
   - component: {fileID: 4047004921586272281}
   - component: {fileID: 2057309264630994300}
@@ -47,8 +47,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1096449434158617960
-BoxCollider2D:
+--- !u!58 &146153868253066236
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -60,19 +60,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.014233187, y: -0.017247006}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.29, y: 0.45}
-    newSize: {x: 0.4, y: 0.8}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 0.18288875, y: 0.23393011}
-  m_EdgeRadius: 0
+  m_Radius: 0.1
 --- !u!50 &-2000073802065362604
 Rigidbody2D:
   serializedVersion: 4
@@ -320,7 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3fc141274c9ce4459b2ca4f9b35da84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 1096449434158617960}
+  collider: {fileID: 0}
   weapon: {fileID: 11400000, guid: 49c6a2c1719bee84582e3e15716bf130, type: 2}
   soldier: {fileID: 11400000, guid: 157333b3708c03343b24a5a7d7063cfa, type: 2}
   moveSpeed: 6
