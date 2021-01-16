@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
@@ -23,23 +24,24 @@ namespace PlayerScripts {
         public TextMeshPro NicknameText;
         public SpriteRenderer sprite;
         public AudioClip deathSound;
+        public AudioSource audio;
+        public AudioClip[] moveSounds = new AudioClip[2];
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
         private bool init;
         private InGameCanvasController canvasController;
+        private IEnumerator moveSoundsEnumerator;
         [SerializeField] private float health;
 
-        AudioSource audio;
 
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
-
-            audio = GetComponent<AudioSource>();
+            moveSoundsEnumerator = moveSounds.GetEnumerator();
         }
 
         void FixedUpdate() {
@@ -87,6 +89,9 @@ namespace PlayerScripts {
                 posChange = posChange.normalized;
             }
 
+            if (posChange.magnitude > 0.1f) {
+                photonView.RPC(nameof(MoveRPC), RpcTarget.All, photonView.ViewID);
+            }
             animSpeed = posChange.magnitude;
             transform.position += posChange * (moveSpeed * Time.deltaTime);
         }
@@ -136,6 +141,16 @@ namespace PlayerScripts {
             }
         }
 
+        [PunRPC]
+        private void MoveRPC(int viewIdWhoMove) {
+            if (photonView.ViewID == viewIdWhoMove) {
+                if (!audio.isPlaying) {
+                    moveSoundsEnumerator.MoveNextCycled();
+                    audio.PlayOneShot(moveSoundsEnumerator.Current as AudioClip);
+                }
+            }
+        }
+
         // InGameCanvasController start
 
         [PunRPC]
@@ -153,5 +168,14 @@ namespace PlayerScripts {
         }
 
         // InGameCanvasController end  
+    }
+}
+
+public static class IEnumeratorExtension {
+    public static void MoveNextCycled(this IEnumerator enumerator) {
+        if (enumerator.MoveNext()) {
+            enumerator.Reset();
+        }
+        enumerator.MoveNext();
     }
 }

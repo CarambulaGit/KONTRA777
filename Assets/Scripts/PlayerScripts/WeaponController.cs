@@ -9,14 +9,14 @@ namespace PlayerScripts {
         public Transform firePoint;
         public LineRenderer lineRenderer;
         public PhotonView photonView;
-        public AudioClip shootSound;
+        public AudioSource audio;
         private InGameCanvasController canvasController;
+        private AudioClip shootSound;
 
-        private AudioSource audio;
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
-            audio = GetComponent<AudioSource>();
+            shootSound = PlayerController.weapon.shootSound;
         }
 
         void Update() {
@@ -51,17 +51,10 @@ namespace PlayerScripts {
             if (photonView.ViewID == viewIdWhoShooted) {
                 StartCoroutine(AnimateShoot(startPos, finishPos));
                 audio.PlayOneShot(shootSound);
-                Debug.Log($"Pif paf oyoyoy");
             }
         }
 
-        // IEnumerator AnimateShoot(RaycastHit2D hitInfo) {
         IEnumerator AnimateShoot(Vector3 startPos, Vector3 finishPos) {
-            // lineRenderer.SetPosition(0, firePoint.position);
-            // lineRenderer.SetPosition(1, hitInfo.transform.position);
-            // // Debug.Log($"Hit {hitInfo.transform.name}");
-            // lineRenderer.SetPosition(0, firePoint.position);
-            // lineRenderer.SetPosition(1, firePoint.position + firePoint.up * 100);
             lineRenderer.SetPosition(0, startPos);
             lineRenderer.SetPosition(1, finishPos);
             lineRenderer.enabled = true;
