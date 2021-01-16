@@ -22,6 +22,7 @@ namespace PlayerScripts {
         public Animator animator;
         public TextMeshPro NicknameText;
         public SpriteRenderer sprite;
+        public AudioClip deathSound;
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
@@ -30,12 +31,15 @@ namespace PlayerScripts {
         private InGameCanvasController canvasController;
         [SerializeField] private float health;
 
+        AudioSource audio;
 
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
+
+            audio = GetComponent<AudioSource>();
         }
 
         void FixedUpdate() {
@@ -73,6 +77,7 @@ namespace PlayerScripts {
             photonView.RPC(nameof(KillRPC), RpcTarget.AllBuffered, photonView.ViewID);
             health = PlayerSoldier.localPlayer.health;
             moveAnimSpeed = 0;
+            audio.PlayOneShot(deathSound);
             Animate();
         }
 
