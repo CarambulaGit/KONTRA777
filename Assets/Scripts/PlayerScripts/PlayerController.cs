@@ -146,7 +146,8 @@ namespace PlayerScripts {
             if (photonView.ViewID == viewIdWhoMove) {
                 if (!audio.isPlaying) {
                     moveSoundsEnumerator.MoveNextCycled();
-                    audio.PlayOneShot(moveSoundsEnumerator.Current as AudioClip);
+                    audio.clip = moveSoundsEnumerator.Current as AudioClip;
+                    audio.Play();
                 }
             }
         }

@@ -11,12 +11,11 @@ namespace PlayerScripts {
         public PhotonView photonView;
         public AudioSource audio;
         private InGameCanvasController canvasController;
-        private AudioClip shootSound;
 
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
-            shootSound = PlayerController.weapon.shootSound;
+            audio.clip = PlayerController.weapon.shootSound;
         }
 
         void Update() {
@@ -50,7 +49,7 @@ namespace PlayerScripts {
         private void ShootRPC(int viewIdWhoShooted, Vector3 startPos, Vector3 finishPos) {
             if (photonView.ViewID == viewIdWhoShooted) {
                 StartCoroutine(AnimateShoot(startPos, finishPos));
-                audio.PlayOneShot(shootSound);
+                audio.Play();
             }
         }
 
