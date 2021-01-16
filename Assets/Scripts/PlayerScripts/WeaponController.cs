@@ -9,10 +9,14 @@ namespace PlayerScripts {
         public Transform firePoint;
         public LineRenderer lineRenderer;
         public PhotonView photonView;
+        private InGameCanvasController canvasController;
 
-        void Start() { }
+        void Start() {
+            canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
+        }
 
         void Update() {
+            // if (!canvasController.isReady) return;
             if (!photonView.IsMine) return;
             if (PlayerController.isDead) return;
             if (Input.GetButtonDown("Fire1")) Shoot();
@@ -23,7 +27,8 @@ namespace PlayerScripts {
             StartCoroutine(AnimateShoot(hitInfo));
             PhotonView hittedPlayerPV;
             if (hitInfo.transform.TryGetComponent<PhotonView>(out hittedPlayerPV)) {
-                photonView.RPC(nameof(GiveDamageRPC),RpcTarget.All, PlayerSoldier.localPlayer.damage, hittedPlayerPV.ViewID);
+                photonView.RPC(nameof(GiveDamageRPC), RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage,
+                    hittedPlayerPV.ViewID);
             }
 
             return hitInfo;
