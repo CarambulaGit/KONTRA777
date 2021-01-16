@@ -23,12 +23,14 @@ namespace PlayerScripts {
         public TextMeshPro NicknameText;
         public SpriteRenderer sprite;
         public AudioClip deathSound;
+        public AudioClip[] stepsSound;
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
         private bool init;
         private InGameCanvasController canvasController;
+        private float[] stepsTime;
         [SerializeField] private float health;
 
         AudioSource audio;
@@ -40,6 +42,8 @@ namespace PlayerScripts {
             NicknameText.SetText(photonView.Owner.NickName);
 
             audio = GetComponent<AudioSource>();
+            stepsTime[0] = 0.5f;
+            stepsTime[1] = 0.5f;
         }
 
         void FixedUpdate() {
