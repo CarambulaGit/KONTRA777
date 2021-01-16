@@ -79,7 +79,6 @@ namespace PlayerScripts {
             photonView.RPC(nameof(KillRPC), RpcTarget.AllBuffered, photonView.ViewID);
             health = PlayerSoldier.localPlayer.health;
             moveAnimSpeed = 0;
-            audio.PlayOneShot(deathSound);
             Animate();
         }
 
@@ -138,6 +137,8 @@ namespace PlayerScripts {
             if (photonView.ViewID == viewId) {
                 collider.enabled = false;
                 sprite.sortingOrder = 1;
+                audio.clip = deathSound;
+                audio.Play();
             }
         }
 
