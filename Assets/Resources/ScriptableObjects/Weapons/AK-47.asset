@@ -17,3 +17,5 @@ MonoBehaviour:
   bulletsInMagazine: 30
   numOfBullets: 120
   reloadTime: 2.5
+  currentAmmo: 4
+  isReloading: 0

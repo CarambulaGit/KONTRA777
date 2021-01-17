@@ -10,5 +10,7 @@ namespace Resources {
         public int bulletsInMagazine;
         public int numOfBullets;
         public float reloadTime;
+        public int currentAmmo;
+        public bool isReloading;
     }
 }
