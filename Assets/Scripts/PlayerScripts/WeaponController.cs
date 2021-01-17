@@ -34,9 +34,6 @@ namespace PlayerScripts {
                 photonView.RPC(nameof(GiveDamageRPC), RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage,
                     hittedPlayerPV.ViewID, PlayerSoldier.localPlayer.photonView.ViewID);
             }
-
-            shootParticle.Emit(1);
-
             return hitInfo;
         }
 
@@ -53,6 +50,7 @@ namespace PlayerScripts {
             if (photonView.ViewID == viewIdWhoShooted) {
                 StartCoroutine(AnimateShoot(startPos, finishPos));
                 audio.Play();
+                shootParticle.Emit(1);
             }
         }
 
