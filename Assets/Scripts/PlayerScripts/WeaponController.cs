@@ -29,7 +29,7 @@ namespace PlayerScripts {
         bool Shoot() {
             var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
             photonView.RPC(nameof(ShootRPC), RpcTarget.All, PlayerSoldier.localPlayer.photonView.ViewID,
-                firePoint.position, hitInfo ? hitInfo.transform.position : firePoint.position + firePoint.up * 100);
+                firePoint.position, hitInfo ? (Vector3) hitInfo.point : firePoint.position + firePoint.up * 100);
             if (hitInfo.transform.TryGetComponent<PhotonView>(out var hittedPlayerPV)) {
                 photonView.RPC(nameof(GiveDamageRPC), RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage,
                     hittedPlayerPV.ViewID, PlayerSoldier.localPlayer.photonView.ViewID);
