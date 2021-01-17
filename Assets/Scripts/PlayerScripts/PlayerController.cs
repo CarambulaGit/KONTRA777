@@ -16,7 +16,7 @@ using UnityEditor;
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
         private const float EPSILON = 0.00001f;
-        public BoxCollider2D collider;
+        public CircleCollider2D collider;
         public Weapon weapon;
         public Soldier soldier;
         public float moveSpeed;
@@ -175,9 +175,9 @@ namespace PlayerScripts {
 
 public static class IEnumeratorExtension {
     public static void MoveNextCycled(this IEnumerator enumerator) {
-        if (enumerator.MoveNext()) {
+        if (!enumerator.MoveNext()) {
             enumerator.Reset();
+            enumerator.MoveNext();
         }
-        enumerator.MoveNext();
     }
 }
