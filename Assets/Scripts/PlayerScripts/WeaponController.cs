@@ -10,6 +10,7 @@ namespace PlayerScripts {
         public LineRenderer lineRenderer;
         public PhotonView photonView;
         public AudioSource audio;
+        public ParticleSystem shootParticle;
         private InGameCanvasController canvasController;
 
 
@@ -33,6 +34,8 @@ namespace PlayerScripts {
                 photonView.RPC(nameof(GiveDamageRPC), RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage,
                     hittedPlayerPV.ViewID, PlayerSoldier.localPlayer.photonView.ViewID);
             }
+
+            shootParticle.Emit(1);
 
             return hitInfo;
         }
