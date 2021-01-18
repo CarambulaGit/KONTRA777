@@ -43,7 +43,7 @@ namespace PlayerScripts {
 
             if (PlayerSoldier.localPlayer.weapon.isReloading) return false;
             PlayerSoldier.localPlayer.weapon.currentAmmo--;
-            var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
+            var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up + Vector3.SignedAngle(Vector3.up, firePoint.up, Vector3.forward) * Spreading(PlayerSoldier.localPlayer.weapon.spread).x * Vector3.right);
             photonView.RPC(nameof(ShootRPC), RpcTarget.All, PlayerSoldier.localPlayer.photonView.ViewID,
                 firePoint.position, hitInfo ? (Vector3) hitInfo.point : firePoint.position + firePoint.up * 100);
             if (hitInfo.transform.TryGetComponent<PhotonView>(out var hittedPlayerPV)) {
@@ -53,6 +53,20 @@ namespace PlayerScripts {
 
             return hitInfo;
         }
+
+        //Разброс
+        private float FindG(float random, float a){
+            return Mathf.Pow(random / 0.5f, 0.5f) * a - a;
+        }
+
+        private float FindRandNumberUsingSimpson(float random, float a) {
+            return random <= 0.5 ? FindG(random, a) : -FindG(1 - random, a);
+        }
+
+        private Vector2 Spreading(float a) {
+            return new Vector2(FindRandNumberUsingSimpson(Random.value, a), 100).normalized;
+        }
+        //Конец разброса
 
         [PunRPC]
         private void GiveDamageRPC(float damage, int viewIdBeenDamaged, int viewIdWhoShooted) {
