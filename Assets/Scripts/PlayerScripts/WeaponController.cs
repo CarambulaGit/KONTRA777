@@ -46,7 +46,7 @@ namespace PlayerScripts {
             PlayerSoldier.localPlayer.weapon.currentAmmo--;
             var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
             photonView.RPC(nameof(ShootRPC), RpcTarget.All, PlayerSoldier.localPlayer.photonView.ViewID,
-                firePoint.position, hitInfo ? (Vector3)hitInfo.point : firePoint.position + firePoint.up * 100);
+                firePoint.position, hitInfo ? (Vector3) hitInfo.point : firePoint.position + firePoint.up * 100);
             if (hitInfo.transform.TryGetComponent<PhotonView>(out var hittedPlayerPV)) {
                 photonView.RPC(nameof(GiveDamageRPC), RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage,
                     hittedPlayerPV.ViewID, PlayerSoldier.localPlayer.photonView.ViewID);
@@ -81,50 +81,39 @@ namespace PlayerScripts {
             lineRenderer.enabled = false;
         }
 
-        private void ReloadTimer()
-        {
+        private void ReloadTimer() {
             if (PlayerSoldier.localPlayer.weapon.numOfBullets == 0 &&
-                PlayerSoldier.localPlayer.weapon.currentAmmo == 0)
-            {
+                PlayerSoldier.localPlayer.weapon.currentAmmo == 0) {
                 PlayerSoldier.localPlayer.weapon.isReloading = true;
                 Debug.Log("No ammo!");
                 return;
             }
-
-            if (!PlayerSoldier.localPlayer.weapon.isReloading)
-            {
+            if (!PlayerSoldier.localPlayer.weapon.isReloading) {
                 audioReload.clip = PlayerController.weapon.reloadSound;
                 audioReload.Play();
-
-
-                if (!PlayerSoldier.localPlayer.weapon.isReloading)
-                {
-
-                    reloadTimer = 0;
-                    PlayerSoldier.localPlayer.weapon.isReloading = true;
-                }
-                else
-                {
-                    reloadTimer += Time.deltaTime;
-                    if (reloadTimer >= PlayerSoldier.localPlayer.weapon.reloadTime)
-                    {
-                        Reload();
-                        PlayerSoldier.localPlayer.weapon.isReloading = false;
-                    }
+                reloadTimer = 0;
+                PlayerSoldier.localPlayer.weapon.isReloading = true;
+            }
+            else {
+                reloadTimer += Time.deltaTime;
+                if (reloadTimer >= PlayerSoldier.localPlayer.weapon.reloadTime) {
+                    Reload();
+                    PlayerSoldier.localPlayer.weapon.isReloading = false;
                 }
             }
         }
-            private void Reload() {
-                if (PlayerSoldier.localPlayer.weapon.numOfBullets < PlayerSoldier.localPlayer.weapon.bulletsInMagazine) {
-                    PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.numOfBullets;
-                    PlayerSoldier.localPlayer.weapon.numOfBullets = 0;
-                    return;
-                }
 
-                PlayerSoldier.localPlayer.weapon.numOfBullets -= PlayerSoldier.localPlayer.weapon.bulletsInMagazine -
-                                                                 PlayerSoldier.localPlayer.weapon.currentAmmo;
-                PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.bulletsInMagazine;
-                Debug.Log("Reloading");
+        private void Reload() {
+            if (PlayerSoldier.localPlayer.weapon.numOfBullets < PlayerSoldier.localPlayer.weapon.bulletsInMagazine) {
+                PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.numOfBullets;
+                PlayerSoldier.localPlayer.weapon.numOfBullets = 0;
+                return;
             }
+
+            PlayerSoldier.localPlayer.weapon.numOfBullets -= PlayerSoldier.localPlayer.weapon.bulletsInMagazine -
+                                                             PlayerSoldier.localPlayer.weapon.currentAmmo;
+            PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.bulletsInMagazine;
+            Debug.Log("Reloading");
         }
-    } 
+    }
+}
