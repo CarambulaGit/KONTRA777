@@ -44,7 +44,9 @@ namespace PlayerScripts {
 
             if (PlayerSoldier.localPlayer.weapon.isReloading) return false;
             PlayerSoldier.localPlayer.weapon.currentAmmo--;
-            var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up + Vector3.SignedAngle(Vector3.up, firePoint.up, Vector3.forward) * Spreading(PlayerSoldier.localPlayer.weapon.spread).x * Vector3.right);
+            var rand = Spreading(PlayerSoldier.localPlayer.weapon.spread);
+            var angle = Vector2.SignedAngle(Vector2.up, firePoint.up);
+            var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up + new Vector3(Mathf.Cos(angle) * rand.x, Mathf.Sin(angle) * rand.x));
             photonView.RPC(nameof(ShootRPC), RpcTarget.All, PlayerSoldier.localPlayer.photonView.ViewID,
                 firePoint.position, hitInfo ? (Vector3) hitInfo.point : firePoint.position + firePoint.up * 100);
             if (hitInfo.transform.TryGetComponent<PhotonView>(out var hittedPlayerPV)) {
