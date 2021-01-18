@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using Photon.Pun;
+using Resources;
 using Resources.Classes;
 using UnityEngine;
+using System.Collections;
 
 namespace PlayerScripts {
     public class WeaponController : MonoBehaviour {
@@ -15,6 +17,8 @@ namespace PlayerScripts {
 
 
         void Start() {
+            PlayerController.weapon.numOfBullets = 120;
+            PlayerController.weapon.currentAmmo = PlayerController.weapon.bulletsInMagazine;
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             audio.clip = PlayerController.weapon.shootSound;
         }
