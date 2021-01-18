@@ -17,6 +17,7 @@ MonoBehaviour:
   bulletsInMagazine: 30
   numOfBullets: 120
   reloadTime: 2.5
-  currentAmmo: 4
+  currentAmmo: 30
   isReloading: 0
   shootSound: {fileID: 8300000, guid: ef4cfd53f9315204c9bf3f715c0972ba, type: 3}
+  reloadSound: {fileID: 8300000, guid: df4985c0818d18749a8b0f92c5c6e394, type: 3}

@@ -11,7 +11,8 @@ namespace PlayerScripts {
         public Transform firePoint;
         public LineRenderer lineRenderer;
         public PhotonView photonView;
-        public AudioSource audio;
+        public AudioSource audioShoot;
+        public AudioSource audioReload;
         public ParticleSystem shootParticle;
         private InGameCanvasController canvasController;
         private float reloadTimer;
@@ -19,7 +20,7 @@ namespace PlayerScripts {
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
-            audio.clip = PlayerController.weapon.shootSound;
+            audioShoot.clip = PlayerController.weapon.shootSound;
         }
 
         void Update() {
@@ -27,7 +28,7 @@ namespace PlayerScripts {
             if (!photonView.IsMine) return;
             if (PlayerController.isDead) return;
             if (!PlayerController.init) return;
-            if (PlayerSoldier.localPlayer.weapon.currentAmmo == 0 || (Input.GetKeyDown(KeyCode.R)) ||
+            if (PlayerSoldier.localPlayer.weapon.currentAmmo == 0 || Input.GetKeyDown(KeyCode.R) ||
                 PlayerSoldier.localPlayer.weapon.isReloading) {
                 ReloadTimer();
             }
@@ -80,7 +81,8 @@ namespace PlayerScripts {
         private void ShootRPC(int viewIdWhoShooted, Vector3 startPos, Vector3 finishPos) {
             if (photonView.ViewID == viewIdWhoShooted) {
                 StartCoroutine(AnimateShoot(startPos, finishPos));
-                audio.Play();
+                audioShoot.clip = PlayerController.weapon.shootSound;
+                audioShoot.Play();
                 shootParticle.Emit(1);
             }
         }
@@ -100,8 +102,9 @@ namespace PlayerScripts {
                 Debug.Log("No ammo!");
                 return;
             }
-
             if (!PlayerSoldier.localPlayer.weapon.isReloading) {
+                audioReload.clip = PlayerController.weapon.reloadSound;
+                audioReload.Play();
                 reloadTimer = 0;
                 PlayerSoldier.localPlayer.weapon.isReloading = true;
             }

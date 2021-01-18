@@ -14,5 +14,6 @@ namespace Resources {
         public bool isReloading;
         public AudioClip shootSound;
         public float spread;
+        public AudioClip reloadSound;
     }
 }
