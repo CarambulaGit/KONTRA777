@@ -913,7 +913,7 @@ MonoBehaviour:
   SpawnPoints:
   - {fileID: 88693859}
   - {fileID: 88693860}
-  roundManager: {fileID: 0}
+  roundManager: {fileID: 1143153181}
 --- !u!4 &1143153179
 Transform:
   m_ObjectHideFlags: 0

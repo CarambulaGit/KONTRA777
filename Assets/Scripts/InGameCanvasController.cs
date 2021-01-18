@@ -20,11 +20,11 @@ public class InGameCanvasController : MonoBehaviour {
     public Slider healthBar;
     public Gradient gradient;
     public Image fill;
+    public Image reloadTimer;
     public CanvasStatus canvasStatus;
     private bool init;
 
     void Start() {
-        
         canvasStatus = CanvasStatus.StartGameMenu;
         OnChangedCanvasStatus();
         SetNecessaryStartGameMenu();
@@ -67,4 +67,5 @@ public class InGameCanvasController : MonoBehaviour {
         sGMHost.SetActive(PhotonNetwork.IsMasterClient);
         sGMOthers.SetActive(!PhotonNetwork.IsMasterClient);
     }
+
 }

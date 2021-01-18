@@ -11,46 +11,43 @@ namespace PlayerScripts {
         public Transform firePoint;
         public LineRenderer lineRenderer;
         public PhotonView photonView;
-        public AudioClip shootSound;
+        public AudioSource audio;
+        public ParticleSystem shootParticle;
         private InGameCanvasController canvasController;
-        private AudioSource audio;
+        private float reloadTimer;
+
 
         void Start() {
-            PlayerController.weapon.numOfBullets = 120;
-            PlayerController.weapon.currentAmmo = PlayerController.weapon.bulletsInMagazine;
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
-            audio = GetComponent<AudioSource>();
+            audio.clip = PlayerController.weapon.shootSound;
         }
 
         void Update() {
             // if (!canvasController.isReady) return;
             if (!photonView.IsMine) return;
             if (PlayerController.isDead) return;
-            if (PlayerController.weapon.numOfBullets <= 0)
+            if (!PlayerController.init) return;
+            if (PlayerSoldier.localPlayer.weapon.currentAmmo == 0 || (Input.GetKeyDown(KeyCode.R)) || PlayerSoldier.localPlayer.weapon.isReloading)
             {
-                Debug.Log("Not ammo)");
-                //Sound empty magazine
-                return;
-            }
-            if (PlayerController.weapon.isReloading) return;
-            if (PlayerController.weapon.currentAmmo <= 0)
-            {
-                StartCoroutine(Reload());
-                return;
+                ReloadTimer();
             }
             if (Input.GetButtonDown("Fire1")) Shoot();
         }
 
         bool Shoot() {
-            PlayerController.weapon.currentAmmo--;
+            if (PlayerSoldier.localPlayer.weapon.numOfBullets == 0 && PlayerSoldier.localPlayer.weapon.currentAmmo == 0)
+            {
+                // TODO sound not amoo
+            }
+            if (PlayerSoldier.localPlayer.weapon.isReloading) return false;
+            PlayerSoldier.localPlayer.weapon.currentAmmo--;
             var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
             photonView.RPC(nameof(ShootRPC), RpcTarget.All, PlayerSoldier.localPlayer.photonView.ViewID,
-                firePoint.position, hitInfo ? hitInfo.transform.position : firePoint.position + firePoint.up * 100);
+                firePoint.position, hitInfo ? (Vector3) hitInfo.point : firePoint.position + firePoint.up * 100);
             if (hitInfo.transform.TryGetComponent<PhotonView>(out var hittedPlayerPV)) {
                 photonView.RPC(nameof(GiveDamageRPC), RpcTarget.All, PlayerSoldier.localPlayer.weapon.damage,
                     hittedPlayerPV.ViewID, PlayerSoldier.localPlayer.photonView.ViewID);
             }
-
             return hitInfo;
         }
 
@@ -66,18 +63,12 @@ namespace PlayerScripts {
         private void ShootRPC(int viewIdWhoShooted, Vector3 startPos, Vector3 finishPos) {
             if (photonView.ViewID == viewIdWhoShooted) {
                 StartCoroutine(AnimateShoot(startPos, finishPos));
-                audio.PlayOneShot(shootSound);
-                Debug.Log($"Pif paf oyoyoy");
+                audio.Play();
+                shootParticle.Emit(1);
             }
         }
 
-        // IEnumerator AnimateShoot(RaycastHit2D hitInfo) {
         IEnumerator AnimateShoot(Vector3 startPos, Vector3 finishPos) {
-            // lineRenderer.SetPosition(0, firePoint.position);
-            // lineRenderer.SetPosition(1, hitInfo.transform.position);
-            // // Debug.Log($"Hit {hitInfo.transform.name}");
-            // lineRenderer.SetPosition(0, firePoint.position);
-            // lineRenderer.SetPosition(1, firePoint.position + firePoint.up * 100);
             lineRenderer.SetPosition(0, startPos);
             lineRenderer.SetPosition(1, finishPos);
             lineRenderer.enabled = true;
@@ -85,13 +76,41 @@ namespace PlayerScripts {
             lineRenderer.enabled = false;
         }
 
-        private IEnumerator Reload() {
-            PlayerController.weapon.isReloading = true;
-            Debug.Log("Reloading...");
-            yield return new WaitForSeconds(PlayerController.weapon.reloadTime);
-            PlayerController.weapon.currentAmmo = PlayerController.weapon.bulletsInMagazine;
-            PlayerController.weapon.numOfBullets -= PlayerController.weapon.bulletsInMagazine;
-            PlayerController.weapon.isReloading = false;
+        public void ReloadTimer() {
+
+            if (PlayerSoldier.localPlayer.weapon.numOfBullets == 0 && PlayerSoldier.localPlayer.weapon.currentAmmo == 0)
+            {
+                PlayerSoldier.localPlayer.weapon.isReloading = true;
+                Debug.Log("No ammo!");
+                return;
+            }
+            if (!PlayerSoldier.localPlayer.weapon.isReloading)
+            {
+                reloadTimer = 0;
+                PlayerSoldier.localPlayer.weapon.isReloading = true;
+            }
+            else
+            {
+                reloadTimer += Time.deltaTime;
+                if (reloadTimer >= PlayerSoldier.localPlayer.weapon.reloadTime)
+                {
+                    Reload();
+                    PlayerSoldier.localPlayer.weapon.isReloading = false;
+                }
+            }
+        }
+
+        public void Reload()
+        {
+            if (PlayerSoldier.localPlayer.weapon.numOfBullets < PlayerSoldier.localPlayer.weapon.bulletsInMagazine)
+            {
+                PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.numOfBullets;
+                PlayerSoldier.localPlayer.weapon.numOfBullets = 0;
+                return;
+            }
+            PlayerSoldier.localPlayer.weapon.numOfBullets -= PlayerSoldier.localPlayer.weapon.bulletsInMagazine - PlayerSoldier.localPlayer.weapon.currentAmmo;
+            PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.bulletsInMagazine;
+            Debug.Log("Reloading");
         }
     }
 }
