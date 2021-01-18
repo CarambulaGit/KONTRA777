@@ -15,7 +15,7 @@ namespace Resources.Classes {
         public Soldier soldier;
         public Weapon weapon;
         public string nickname { get; set; }
-        private Player photonPlayer;
+        public Player photonPlayer;
         private PhotonTeam team;
         public GameObject gOPlayer;
         public PhotonView photonView;

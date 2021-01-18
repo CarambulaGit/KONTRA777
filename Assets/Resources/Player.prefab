@@ -323,6 +323,7 @@ MonoBehaviour:
   moveSounds:
   - {fileID: 8300000, guid: 975ede5b4df59d640855f7ae0bd3685f, type: 3}
   - {fileID: 8300000, guid: 490270d5837c68e4290cce1c902be8ea, type: 3}
+  init: 0
   health: 0
 --- !u!114 &4001391294939030087
 MonoBehaviour:

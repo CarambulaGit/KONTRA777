@@ -27,7 +27,7 @@ namespace PlayerScripts {
             if (!photonView.IsMine) return;
             if (PlayerController.isDead) return;
             if (!PlayerController.init) return;
-            if (PlayerSoldier.localPlayer.weapon.currentAmmo == 0 || (Input.GetKeyDown(KeyCode.R)) ||
+            if (PlayerSoldier.localPlayer.weapon.currentAmmo == 0 || Input.GetKeyDown(KeyCode.R) ||
                 PlayerSoldier.localPlayer.weapon.isReloading) {
                 ReloadTimer();
             }
