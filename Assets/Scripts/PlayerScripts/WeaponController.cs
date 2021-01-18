@@ -23,10 +23,16 @@ namespace PlayerScripts {
             // if (!canvasController.isReady) return;
             if (!photonView.IsMine) return;
             if (PlayerController.isDead) return;
+            if (PlayerSoldier.localPlayer.weapon.currentAmmo == 0 || (Input.GetKeyDown(KeyCode.R)))
+            {
+                ReloadTimer();
+            }
             if (Input.GetButtonDown("Fire1")) Shoot();
         }
 
         bool Shoot() {
+            if (PlayerSoldier.localPlayer.weapon.isReloading) return false;
+            PlayerSoldier.localPlayer.weapon.currentAmmo--;
             var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
             photonView.RPC(nameof(ShootRPC), RpcTarget.All, PlayerSoldier.localPlayer.photonView.ViewID,
                 firePoint.position, hitInfo ? (Vector3) hitInfo.point : firePoint.position + firePoint.up * 100);
@@ -60,6 +66,42 @@ namespace PlayerScripts {
             lineRenderer.enabled = true;
             yield return new WaitForSeconds(0.02f);
             lineRenderer.enabled = false;
+        }
+
+        public void ReloadTimer() {
+            if (PlayerSoldier.localPlayer.weapon.numOfBullets == 0 && PlayerSoldier.localPlayer.weapon.currentAmmo == 0)
+            {
+                // TODO sound not amoo
+                Debug.Log("No ammo!");
+                return;
+            }
+            if (!PlayerSoldier.localPlayer.weapon.isReloading)
+            {
+                PlayerSoldier.localPlayer.weapon.isReloading = true;
+            }
+            else
+            {
+                PlayerSoldier.localPlayer.weapon.reloadTime -= Time.deltaTime;
+                if (PlayerSoldier.localPlayer.weapon.reloadTime <= 0)
+                {
+                    Reload();
+                }
+            }
+        }
+
+        public void Reload()
+        {
+            if (PlayerSoldier.localPlayer.weapon.numOfBullets < PlayerSoldier.localPlayer.weapon.bulletsInMagazine)
+            {
+                PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.numOfBullets;
+                PlayerSoldier.localPlayer.weapon.numOfBullets = 0;
+                PlayerSoldier.localPlayer.weapon.isReloading = false;
+                return;
+            }
+            PlayerSoldier.localPlayer.weapon.numOfBullets -= PlayerSoldier.localPlayer.weapon.bulletsInMagazine - PlayerSoldier.localPlayer.weapon.currentAmmo;
+            PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.bulletsInMagazine;
+            PlayerSoldier.localPlayer.weapon.isReloading = false;
+            Debug.Log("Reloading");
         }
     }
 }
