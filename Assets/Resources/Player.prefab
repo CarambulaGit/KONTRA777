@@ -57,7 +57,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 2316434830828239912}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4ecb1f3e531b7af4e88592249e9a54ce, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3fc141274c9ce4459b2ca4f9b35da84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 0}
+  collider: {fileID: 146153868253066236}
   weapon: {fileID: 11400000, guid: 49c6a2c1719bee84582e3e15716bf130, type: 2}
   soldier: {fileID: 11400000, guid: 157333b3708c03343b24a5a7d7063cfa, type: 2}
   moveSpeed: 6
