@@ -9,12 +9,14 @@ namespace ServerScripts
 		public InputField nicknameInputField;
 		public Text logText;
 		public string roomName = "default";
-		private string path = "Assets/Resources/Nickname.txt";
+		private string path;
+		private string nicknameFileName = "Nickname.txt";
 
 		[Range(1, 8)] public int numOfPlayers = 4;
 
 		public override void OnEnable() {
 			base.OnEnable();
+			path = Path.Combine(Application.dataPath, nicknameFileName);
 			nicknameInputField.text = LoadNickname();
 		}
 
@@ -47,8 +49,7 @@ namespace ServerScripts
 		}
 
 		void Update() { }
-		
-		
+
 		void SaveNickname(string nickname) {
 			using (StreamWriter sw = File.CreateText(path)) {
 				sw.WriteLine(nickname);

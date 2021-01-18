@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
@@ -15,19 +16,23 @@ using UnityEditor;
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
         private const float EPSILON = 0.00001f;
-        public BoxCollider2D collider;
+        public CircleCollider2D collider;
         public Weapon weapon;
         public Soldier soldier;
         public float moveSpeed;
         public Animator animator;
         public TextMeshPro NicknameText;
         public SpriteRenderer sprite;
+        public AudioClip deathSound;
+        public AudioSource audio;
+        public AudioClip[] moveSounds = new AudioClip[2];
+        public bool init;
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
-        private bool init;
         private InGameCanvasController canvasController;
+        private IEnumerator moveSoundsEnumerator;
         [SerializeField] private float health;
 
 
@@ -36,7 +41,7 @@ namespace PlayerScripts {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
-        
+            moveSoundsEnumerator = moveSounds.GetEnumerator();
         }
 
         void FixedUpdate() {
@@ -45,11 +50,11 @@ namespace PlayerScripts {
                 init = true;
             }
 
-            if (!canvasController.isReady) return;
+            // if (!canvasController.isReady) return;
+            SynchronizeNetworkVariables();
 
             if (!photonView.IsMine) return;
 
-            SynchronizeNetworkVariables();
             if (isDead) return;
             isDead = PlayerSoldier.localPlayer.IsDead();
             if (isDead) {
@@ -62,7 +67,12 @@ namespace PlayerScripts {
         }
 
         private void SynchronizeNetworkVariables() {
-            health = PlayerSoldier.localPlayer.health;
+            if (photonView.IsMine) {
+                health = PlayerSoldier.localPlayer.health;
+            }
+            else {
+                PlayerSoldier.FindPSByPhotonView(photonView).health = health;
+            }
         }
 
         private void Kill() {
@@ -78,6 +88,9 @@ namespace PlayerScripts {
                 posChange = posChange.normalized;
             }
 
+            if (posChange.magnitude > 0.1f) {
+                photonView.RPC(nameof(MoveRPC), RpcTarget.All, photonView.ViewID);
+            }
             animSpeed = posChange.magnitude;
             transform.position += posChange * (moveSpeed * Time.deltaTime);
         }
@@ -98,7 +111,7 @@ namespace PlayerScripts {
 
         private PlayerSoldier initPlayerSoldier() {
             var player = new PlayerSoldier(photonView.Owner, photonView.Owner.NickName,
-                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), weapon, soldier, gameObject);
+                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), Instantiate(weapon), soldier, gameObject);
             if (photonView.IsMine) {
                 PlayerSoldier.localPlayer = player;
             }
@@ -124,6 +137,19 @@ namespace PlayerScripts {
             if (photonView.ViewID == viewId) {
                 collider.enabled = false;
                 sprite.sortingOrder = 1;
+                audio.clip = deathSound;
+                audio.Play();
+            }
+        }
+
+        [PunRPC]
+        private void MoveRPC(int viewIdWhoMove) {
+            if (photonView.ViewID == viewIdWhoMove) {
+                if (!audio.isPlaying) {
+                    moveSoundsEnumerator.MoveNextCycled();
+                    audio.clip = moveSoundsEnumerator.Current as AudioClip;
+                    audio.Play();
+                }
             }
         }
 
@@ -132,7 +158,10 @@ namespace PlayerScripts {
         [PunRPC]
         private void StartGameRPC() {
             canvasController.isReady = true;
-            canvasController.canvasStatus = canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu ? 0 : canvasController.canvasStatus;
+            canvasController.canvasStatus =
+                canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu
+                    ? 0
+                    : canvasController.canvasStatus;
             canvasController.OnChangedCanvasStatus();
         }
 
@@ -141,6 +170,14 @@ namespace PlayerScripts {
         }
 
         // InGameCanvasController end  
-        
+    }
+}
+
+public static class IEnumeratorExtension {
+    public static void MoveNextCycled(this IEnumerator enumerator) {
+        if (!enumerator.MoveNext()) {
+            enumerator.Reset();
+            enumerator.MoveNext();
+        }
     }
 }

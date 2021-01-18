@@ -4,6 +4,7 @@ using Photon.Pun;
 using PlayerScripts;
 using Resources.Classes;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InGameCanvasController : MonoBehaviour {
     public enum CanvasStatus : ushort {
@@ -16,7 +17,12 @@ public class InGameCanvasController : MonoBehaviour {
     public GameObject sGMHost;
     public GameObject sGMOthers;
     public GameObject escMenu;
+    public Slider healthBar;
+    public Gradient gradient;
+    public Image fill;
+    public Image reloadTimer;
     public CanvasStatus canvasStatus;
+    private bool init;
 
     void Start() {
         canvasStatus = CanvasStatus.StartGameMenu;
@@ -25,14 +31,27 @@ public class InGameCanvasController : MonoBehaviour {
     }
 
     void Update() {
+        if (!init && PlayerSoldier.localPlayer != null) {
+            healthBar.maxValue = PlayerSoldier.localPlayer.soldier.health;
+            fill.color = gradient.Evaluate(1f);
+            init = true;
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            canvasStatus = CanvasStatus.EscMenu;
+            canvasStatus = canvasStatus == CanvasStatus.EscMenu ? 0 : CanvasStatus.EscMenu;
             OnChangedCanvasStatus();
         }
+
+        if (init) {
+            healthBar.value = PlayerSoldier.localPlayer.health;
+            fill.color = gradient.Evaluate(healthBar.normalizedValue);
+        }
+       
     }
 
     public void OnChangedCanvasStatus() {
-        startGameMenu.SetActive(canvasStatus == CanvasStatus.StartGameMenu);
+        // startGameMenu.SetActive(canvasStatus == CanvasStatus.StartGameMenu);
+        startGameMenu.SetActive(false); // todo
         escMenu.SetActive(canvasStatus == CanvasStatus.EscMenu);
     }
 
@@ -48,4 +67,5 @@ public class InGameCanvasController : MonoBehaviour {
         sGMHost.SetActive(PhotonNetwork.IsMasterClient);
         sGMOthers.SetActive(!PhotonNetwork.IsMasterClient);
     }
+
 }
