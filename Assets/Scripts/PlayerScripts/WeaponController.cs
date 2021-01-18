@@ -14,11 +14,10 @@ namespace PlayerScripts {
         public AudioSource audio;
         public ParticleSystem shootParticle;
         private InGameCanvasController canvasController;
+        private float reloadTimer;
 
 
         void Start() {
-            PlayerController.weapon.numOfBullets = 120;
-            PlayerController.weapon.currentAmmo = PlayerController.weapon.bulletsInMagazine;
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
             audio.clip = PlayerController.weapon.shootSound;
         }
@@ -27,7 +26,8 @@ namespace PlayerScripts {
             // if (!canvasController.isReady) return;
             if (!photonView.IsMine) return;
             if (PlayerController.isDead) return;
-            if (PlayerSoldier.localPlayer.weapon.currentAmmo == 0 || (Input.GetKeyDown(KeyCode.R)))
+            if (!PlayerController.init) return;
+            if (PlayerSoldier.localPlayer.weapon.currentAmmo == 0 || (Input.GetKeyDown(KeyCode.R)) || PlayerSoldier.localPlayer.weapon.isReloading)
             {
                 ReloadTimer();
             }
@@ -35,6 +35,10 @@ namespace PlayerScripts {
         }
 
         bool Shoot() {
+            if (PlayerSoldier.localPlayer.weapon.numOfBullets == 0 && PlayerSoldier.localPlayer.weapon.currentAmmo == 0)
+            {
+                // TODO sound not amoo
+            }
             if (PlayerSoldier.localPlayer.weapon.isReloading) return false;
             PlayerSoldier.localPlayer.weapon.currentAmmo--;
             var hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
@@ -73,22 +77,25 @@ namespace PlayerScripts {
         }
 
         public void ReloadTimer() {
+
             if (PlayerSoldier.localPlayer.weapon.numOfBullets == 0 && PlayerSoldier.localPlayer.weapon.currentAmmo == 0)
             {
-                // TODO sound not amoo
+                PlayerSoldier.localPlayer.weapon.isReloading = true;
                 Debug.Log("No ammo!");
                 return;
             }
             if (!PlayerSoldier.localPlayer.weapon.isReloading)
             {
+                reloadTimer = 0;
                 PlayerSoldier.localPlayer.weapon.isReloading = true;
             }
             else
             {
-                PlayerSoldier.localPlayer.weapon.reloadTime -= Time.deltaTime;
-                if (PlayerSoldier.localPlayer.weapon.reloadTime <= 0)
+                reloadTimer += Time.deltaTime;
+                if (reloadTimer >= PlayerSoldier.localPlayer.weapon.reloadTime)
                 {
                     Reload();
+                    PlayerSoldier.localPlayer.weapon.isReloading = false;
                 }
             }
         }
@@ -99,12 +106,10 @@ namespace PlayerScripts {
             {
                 PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.numOfBullets;
                 PlayerSoldier.localPlayer.weapon.numOfBullets = 0;
-                PlayerSoldier.localPlayer.weapon.isReloading = false;
                 return;
             }
             PlayerSoldier.localPlayer.weapon.numOfBullets -= PlayerSoldier.localPlayer.weapon.bulletsInMagazine - PlayerSoldier.localPlayer.weapon.currentAmmo;
             PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.bulletsInMagazine;
-            PlayerSoldier.localPlayer.weapon.isReloading = false;
             Debug.Log("Reloading");
         }
     }

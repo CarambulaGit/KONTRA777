@@ -26,11 +26,11 @@ namespace PlayerScripts {
         public AudioClip deathSound;
         public AudioSource audio;
         public AudioClip[] moveSounds = new AudioClip[2];
+        public bool init;
         public bool isDead { get; private set; }
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
-        private bool init;
         private InGameCanvasController canvasController;
         private IEnumerator moveSoundsEnumerator;
         [SerializeField] private float health;
@@ -111,7 +111,7 @@ namespace PlayerScripts {
 
         private PlayerSoldier initPlayerSoldier() {
             var player = new PlayerSoldier(photonView.Owner, photonView.Owner.NickName,
-                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), weapon, soldier, gameObject);
+                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), Instantiate(weapon), soldier, gameObject);
             if (photonView.IsMine) {
                 PlayerSoldier.localPlayer = player;
             }
