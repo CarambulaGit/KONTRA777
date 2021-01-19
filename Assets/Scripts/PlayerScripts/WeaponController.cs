@@ -106,35 +106,30 @@ namespace PlayerScripts {
                 Debug.Log("No ammo!");
                 return;
             }
+            if (PlayerSoldier.localPlayer.weapon.numOfBullets == 0 && PlayerSoldier.localPlayer.weapon.currentAmmo != 0) return;
             if (!PlayerSoldier.localPlayer.weapon.isReloading) {
                 audioReload.clip = PlayerController.weapon.reloadSound;
                 audioReload.Play();
                 reloadTimer = 0;
                 PlayerSoldier.localPlayer.weapon.isReloading = true;
             }
-            else {
-                reloadTimer += Time.deltaTime;
-                IAmReloading?.Invoke();
-                if (reloadTimer >= PlayerSoldier.localPlayer.weapon.reloadTime) {
-                    Reload();
-                    PlayerSoldier.localPlayer.weapon.isReloading = false;
-                }
+            
+            reloadTimer += Time.deltaTime;
+            IAmReloading?.Invoke();
+            if (reloadTimer >= PlayerSoldier.localPlayer.weapon.reloadTime) {
+                Reload();
+                PlayerSoldier.localPlayer.weapon.isReloading = false;
             }
+            
         }
-
+        
         private void Reload() {
-            if (PlayerSoldier.localPlayer.weapon.numOfBullets < PlayerSoldier.localPlayer.weapon.bulletsInMagazine) {
-                PlayerSoldier.localPlayer.weapon.numOfBullets -= (PlayerSoldier.localPlayer.weapon.bulletsInMagazine -
-                                                                PlayerSoldier.localPlayer.weapon.currentAmmo);
-                PlayerSoldier.localPlayer.weapon.currentAmmo += (PlayerSoldier.localPlayer.weapon.bulletsInMagazine -
-                                                                PlayerSoldier.localPlayer.weapon.currentAmmo);
-                return;
-            }
-
-            PlayerSoldier.localPlayer.weapon.numOfBullets -= PlayerSoldier.localPlayer.weapon.bulletsInMagazine -
-                                                             PlayerSoldier.localPlayer.weapon.currentAmmo;
-            PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.bulletsInMagazine;
-            Debug.Log("Reloading");
+            var allAmmo = PlayerSoldier.localPlayer.weapon.currentAmmo + PlayerSoldier.localPlayer.weapon.numOfBullets;
+            PlayerSoldier.localPlayer.weapon.currentAmmo = allAmmo >= PlayerSoldier.localPlayer.weapon.bulletsInMagazine 
+                                                                    ? PlayerSoldier.localPlayer.weapon.bulletsInMagazine 
+                                                                    : allAmmo % PlayerSoldier.localPlayer.weapon.bulletsInMagazine;
+            PlayerSoldier.localPlayer.weapon.numOfBullets = allAmmo - PlayerSoldier.localPlayer.weapon.currentAmmo;
         }
+
     }
 }
