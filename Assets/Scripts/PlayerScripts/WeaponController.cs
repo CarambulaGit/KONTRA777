@@ -4,6 +4,7 @@ using Resources;
 using Resources.Classes;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 
 namespace PlayerScripts {
     public class WeaponController : MonoBehaviour {
@@ -17,6 +18,7 @@ namespace PlayerScripts {
         private InGameCanvasController canvasController;
         private float reloadTimer;
 
+        public static UnityAction IAmReloading;
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
@@ -112,6 +114,7 @@ namespace PlayerScripts {
             }
             else {
                 reloadTimer += Time.deltaTime;
+                IAmReloading?.Invoke();
                 if (reloadTimer >= PlayerSoldier.localPlayer.weapon.reloadTime) {
                     Reload();
                     PlayerSoldier.localPlayer.weapon.isReloading = false;
@@ -121,8 +124,10 @@ namespace PlayerScripts {
 
         private void Reload() {
             if (PlayerSoldier.localPlayer.weapon.numOfBullets < PlayerSoldier.localPlayer.weapon.bulletsInMagazine) {
-                PlayerSoldier.localPlayer.weapon.currentAmmo = PlayerSoldier.localPlayer.weapon.numOfBullets;
-                PlayerSoldier.localPlayer.weapon.numOfBullets = 0;
+                PlayerSoldier.localPlayer.weapon.numOfBullets -= (PlayerSoldier.localPlayer.weapon.bulletsInMagazine -
+                                                                PlayerSoldier.localPlayer.weapon.currentAmmo);
+                PlayerSoldier.localPlayer.weapon.currentAmmo += (PlayerSoldier.localPlayer.weapon.bulletsInMagazine -
+                                                                PlayerSoldier.localPlayer.weapon.currentAmmo);
                 return;
             }
 
