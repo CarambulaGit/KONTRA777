@@ -21,13 +21,17 @@ public class InGameCanvasController : MonoBehaviour {
     public Gradient gradient;
     public Image fill;
     public Image reloadTimer;
+    public Text CurrentAmmo;
+    public Text NumOfBullets;
     public CanvasStatus canvasStatus;
     private bool init;
+    private bool isReloading;
 
     void Start() {
         canvasStatus = CanvasStatus.StartGameMenu;
         OnChangedCanvasStatus();
         SetNecessaryStartGameMenu();
+        WeaponController.IAmReloading += ReloadTimer;
     }
 
     void Update() {
@@ -43,10 +47,15 @@ public class InGameCanvasController : MonoBehaviour {
         }
 
         if (init) {
+            if (!PlayerSoldier.localPlayer.weapon.isReloading) {
+                reloadTimer.fillAmount = 1;
+                reloadTimer.enabled = false;
+            }
             healthBar.value = PlayerSoldier.localPlayer.health;
             fill.color = gradient.Evaluate(healthBar.normalizedValue);
+            CurrentAmmo.text = PlayerSoldier.localPlayer.weapon.currentAmmo.ToString();
+            NumOfBullets.text = PlayerSoldier.localPlayer.weapon.numOfBullets.ToString();
         }
-       
     }
 
     public void OnChangedCanvasStatus() {
@@ -66,6 +75,11 @@ public class InGameCanvasController : MonoBehaviour {
     private void SetNecessaryStartGameMenu() {
         sGMHost.SetActive(PhotonNetwork.IsMasterClient);
         sGMOthers.SetActive(!PhotonNetwork.IsMasterClient);
+    }
+
+    public void ReloadTimer() {
+        if (PlayerSoldier.localPlayer.weapon.isReloading) reloadTimer.enabled = true;
+        reloadTimer.fillAmount -= Time.deltaTime/PlayerSoldier.localPlayer.weapon.reloadTime;
     }
 
 }
