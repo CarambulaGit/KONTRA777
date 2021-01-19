@@ -15,6 +15,7 @@ namespace PlayerScripts {
         public ParticleSystem shootParticle;
         private InGameCanvasController canvasController;
         private float reloadTimer;
+        public ParticleSystem blood;
 
 
         void Start() {
@@ -56,6 +57,8 @@ namespace PlayerScripts {
             if (PlayerSoldier.localPlayer.photonView.ViewID == viewIdBeenDamaged) {
                 Debug.Log($"Auch! Taken {damage} damage");
                 PlayerSoldier.localPlayer.TakeDamage(damage);
+                blood.Emit(5);
+
             }
         }
 
@@ -65,6 +68,7 @@ namespace PlayerScripts {
                 StartCoroutine(AnimateShoot(startPos, finishPos));
                 audio.Play();
                 shootParticle.Emit(1);
+
             }
         }
 
