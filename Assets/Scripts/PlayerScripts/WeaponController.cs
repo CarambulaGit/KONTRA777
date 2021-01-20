@@ -79,7 +79,7 @@ namespace PlayerScripts {
             if (PlayerSoldier.localPlayer.photonView.ViewID == viewIdBeenDamaged) {
                 Debug.Log($"Auch! Taken {damage} damage");
                 PlayerSoldier.localPlayer.TakeDamage(damage);
-                blood.Emit(5);
+                blood.Emit(4);
 
             }
         }
@@ -91,7 +91,6 @@ namespace PlayerScripts {
                 audioShoot.clip = PlayerController.weapon.shootSound;
                 audioShoot.Play();
                 shootParticle.Emit(1);
-
             }
         }
 
