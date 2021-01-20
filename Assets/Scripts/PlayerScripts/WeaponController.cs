@@ -80,9 +80,11 @@ namespace PlayerScripts {
                 Debug.Log($"Auch! Taken {damage} damage");
                 PlayerSoldier.localPlayer.TakeDamage(damage);
                 PlayerSoldier.localPlayer.playerController.isDamaged();
+            }else if (photonView.ViewID == viewIdBeenDamaged) {
                 PlayerSoldier.localPlayer.playerController.blood.Emit(4);
 
             }
+            
         }
 
         [PunRPC]
