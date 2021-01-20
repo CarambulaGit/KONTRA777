@@ -1075,10 +1075,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6562304976703203629, guid: b3a0a7484138e0a4590fe8a772e3fd58,
         type: 3}
+    - target: {fileID: 1772653996736442791, guid: f4546f6a7b50048429a0a6fdced61351,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2926036336829212472, guid: f4546f6a7b50048429a0a6fdced61351,
         type: 3}
       propertyPath: m_Name
       value: ShootFirePref
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926036336829212472, guid: f4546f6a7b50048429a0a6fdced61351,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3462885676306190246, guid: f4546f6a7b50048429a0a6fdced61351,
         type: 3}
@@ -1206,6 +1216,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BloodSplash
       objectReference: {fileID: 0}
+    - target: {fileID: 752312886897596493, guid: c5bd4dc55e7c2714bae9e59cf2b4e9b8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1437654391602945691, guid: c5bd4dc55e7c2714bae9e59cf2b4e9b8,
         type: 3}
       propertyPath: m_RenderAlignment
@@ -1285,6 +1300,11 @@ PrefabInstance:
         type: 3}
       propertyPath: ShapeModule.radiusThickness
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946608967673357591, guid: c5bd4dc55e7c2714bae9e59cf2b4e9b8,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6671426064091951256, guid: c5bd4dc55e7c2714bae9e59cf2b4e9b8,
         type: 3}
