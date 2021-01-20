@@ -5,6 +5,7 @@ using System.Text;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using PlayerScripts;
 using UnityEngine;
 
 namespace Resources.Classes {
@@ -19,6 +20,7 @@ namespace Resources.Classes {
         private PhotonTeam team;
         public GameObject gOPlayer;
         public PhotonView photonView;
+        public PlayerController playerController;
 
         public static PlayerSoldier FindPSByPhotonPlayer(Player player) {
             return players.First(somePlayer => somePlayer.photonPlayer.Equals(player));
@@ -48,7 +50,7 @@ namespace Resources.Classes {
             return PlayersIsDead(GetAllPSByTeam(team));
         }
 
-        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier, GameObject gOPlayer) {
+        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier, GameObject gOPlayer, PlayerController playerController) {
             this.photonPlayer = photonPlayer;
             this.nickname = nickname;
             this.team = team;
@@ -57,6 +59,7 @@ namespace Resources.Classes {
             this.soldier = soldier;
             this.health = soldier.health;
             this.photonView = this.gOPlayer.GetPhotonView();
+            this.playerController = playerController;
             players.Add(this);
         }
 

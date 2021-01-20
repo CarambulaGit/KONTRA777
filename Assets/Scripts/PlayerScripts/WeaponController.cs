@@ -79,6 +79,7 @@ namespace PlayerScripts {
             if (PlayerSoldier.localPlayer.photonView.ViewID == viewIdBeenDamaged) {
                 Debug.Log($"Auch! Taken {damage} damage");
                 PlayerSoldier.localPlayer.TakeDamage(damage);
+                PlayerSoldier.localPlayer.playerController.isDamaged();
                 blood.Emit(4);
 
             }
