@@ -360,6 +360,7 @@ MonoBehaviour:
   photonView: {fileID: 3710601590916556813}
   audioShoot: {fileID: 3205587555460700092}
   audioReload: {fileID: 4020794262885119255}
+  audioNoAmoo: {fileID: 8541798150628939196}
   shootParticle: {fileID: 3520720497089436535}
   blood: {fileID: 5861940216433586527}
 --- !u!114 &-1122572446260933072
