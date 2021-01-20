@@ -88,8 +88,8 @@ public class InGameCanvasController : MonoBehaviour {
 
     private void ReloadTick() {
         if (!PlayerSoldier.localPlayer.weapon.isReloading) {
-            reloadTimer.fillAmount = 1;
-            reloadTimer.enabled = false;
+            reloadTimer.fillAmount = 0;
+            reloadTimer.gameObject.SetActive(false);
         }
     }
 
@@ -105,7 +105,7 @@ public class InGameCanvasController : MonoBehaviour {
     }
 
     private void ReloadTimer() {
-        if (PlayerSoldier.localPlayer.weapon.isReloading) reloadTimer.enabled = true;
-        reloadTimer.fillAmount -= Time.deltaTime / PlayerSoldier.localPlayer.weapon.reloadTime;
+        if (PlayerSoldier.localPlayer.weapon.isReloading) reloadTimer.gameObject.SetActive(true);
+        reloadTimer.fillAmount += Time.deltaTime / PlayerSoldier.localPlayer.weapon.reloadTime;
     }
 }
