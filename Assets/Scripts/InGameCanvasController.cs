@@ -21,32 +21,36 @@ public class InGameCanvasController : MonoBehaviour {
     public Gradient gradient;
     public Image fill;
     public Image reloadTimer;
+    public Text CurrentAmmo;
+    public Text NumOfBullets;
     public CanvasStatus canvasStatus;
     private bool init;
+    private bool isReloading;
 
     void Start() {
         canvasStatus = CanvasStatus.StartGameMenu;
         OnChangedCanvasStatus();
         SetNecessaryStartGameMenu();
+        WeaponController.IAmReloading += ReloadTimer;
     }
 
     void Update() {
-        if (!init && PlayerSoldier.localPlayer != null) {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            canvasStatus = canvasStatus == CanvasStatus.EscMenu ? 0 : CanvasStatus.EscMenu;
+            OnChangedCanvasStatus();
+        }
+
+        if (PlayerSoldier.localPlayer == null) return;
+
+        if (!init) {
             healthBar.maxValue = PlayerSoldier.localPlayer.soldier.health;
             fill.color = gradient.Evaluate(1f);
             init = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            canvasStatus = canvasStatus == CanvasStatus.EscMenu ? 0 : CanvasStatus.EscMenu;
-            OnChangedCanvasStatus();
-        }
-
-        if (init) {
-            healthBar.value = PlayerSoldier.localPlayer.health;
-            fill.color = gradient.Evaluate(healthBar.normalizedValue);
-        }
-       
+        Tick();
     }
 
     public void OnChangedCanvasStatus() {
@@ -66,6 +70,36 @@ public class InGameCanvasController : MonoBehaviour {
     private void SetNecessaryStartGameMenu() {
         sGMHost.SetActive(PhotonNetwork.IsMasterClient);
         sGMOthers.SetActive(!PhotonNetwork.IsMasterClient);
+    }
+
+    public void ReloadTick() {
+        if (!PlayerSoldier.localPlayer.weapon.isReloading)
+        {
+            reloadTimer.fillAmount = 1;
+            reloadTimer.enabled = false;
+        }
+    }
+
+    public void Tick() {
+        ReloadTick();
+        HealthTick();
+        AmmoTick();
+    }
+
+    public void HealthTick()
+    {
+        healthBar.value = PlayerSoldier.localPlayer.health;
+        fill.color = gradient.Evaluate(healthBar.normalizedValue);
+    }
+
+    public void AmmoTick() {
+        CurrentAmmo.text = PlayerSoldier.localPlayer.weapon.currentAmmo.ToString();
+        NumOfBullets.text = PlayerSoldier.localPlayer.weapon.numOfBullets.ToString();
+    }
+
+    public void ReloadTimer() {
+        if (PlayerSoldier.localPlayer.weapon.isReloading) reloadTimer.enabled = true;
+        reloadTimer.fillAmount -= Time.deltaTime/PlayerSoldier.localPlayer.weapon.reloadTime;
     }
 
 }
