@@ -34,23 +34,29 @@ namespace Resources.Classes {
             return players.First(somePlayer => somePlayer.nickname.Equals(nickname));
         }
 
-        public static PlayerSoldier FindPSByPhotonView(PhotonView pv) {
-            return players.First(somePlayer => somePlayer.photonView.ViewID == pv.ViewID);
+        public static PlayerSoldier FindPSByPhotonViewID(int photonViewID) {
+            return players.First(somePlayer => somePlayer.photonView.ViewID == photonViewID);
         }
+
+        public static PlayerSoldier FindPSByPhotonView(PhotonView pv) {
+            return FindPSByPhotonViewID(pv.ViewID);
+        }
+
 
         public static List<PlayerSoldier> GetAllPSByTeam(PhotonTeam team) {
             return players.FindAll(somePlayer => somePlayer.team.Equals(team));
         }
 
         public static bool PlayersIsDead(List<PlayerSoldier> players) {
-           return players.All(somePlayer => somePlayer.IsDead());
+            return players.All(somePlayer => somePlayer.IsDead());
         }
 
         public static bool TeamIsDead(PhotonTeam team) {
             return PlayersIsDead(GetAllPSByTeam(team));
         }
 
-        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier, GameObject gOPlayer, PlayerController playerController) {
+        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier,
+            GameObject gOPlayer, PlayerController playerController) {
             this.photonPlayer = photonPlayer;
             this.nickname = nickname;
             this.team = team;
@@ -67,7 +73,7 @@ namespace Resources.Classes {
         public void Kill() => this.health = 0;
 
         public void TakeDamage(float damage) {
-            this.health = Mathf.Clamp(health - damage, 0, soldier.health); 
+            this.health = Mathf.Clamp(health - damage, 0, soldier.health);
         }
 
         public override string ToString() {
