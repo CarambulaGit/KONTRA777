@@ -34,6 +34,10 @@ namespace PlayerScripts {
         private InGameCanvasController canvasController;
         private IEnumerator moveSoundsEnumerator;
         [SerializeField] private float health;
+        
+        private int slowdownTime = 60;
+        private float slowdownCoef = 0.5f;
+        private int counter = 0;
 
 
         void Start() {
@@ -92,7 +96,16 @@ namespace PlayerScripts {
                 photonView.RPC(nameof(MoveRPC), RpcTarget.All, photonView.ViewID);
             }
             animSpeed = posChange.magnitude;
-            transform.position += posChange * (moveSpeed * Time.deltaTime);
+            if (counter > 0)
+            {
+                transform.position += posChange * (moveSpeed * Time.deltaTime) * slowdownCoef;
+                counter--;
+            }
+            else
+            {
+                transform.position += posChange * (moveSpeed * Time.deltaTime);
+
+            }
         }
 
 
@@ -111,7 +124,7 @@ namespace PlayerScripts {
 
         private PlayerSoldier initPlayerSoldier() {
             var player = new PlayerSoldier(photonView.Owner, photonView.Owner.NickName,
-                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), Instantiate(weapon), soldier, gameObject);
+                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), Instantiate(weapon), soldier, gameObject, this);
             if (photonView.IsMine) {
                 PlayerSoldier.localPlayer = player;
             }
@@ -167,6 +180,11 @@ namespace PlayerScripts {
 
         public void OnStartGame() {
             photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
+        }
+
+        public void isDamaged()
+        {
+            counter += slowdownTime;
         }
 
         // InGameCanvasController end  
