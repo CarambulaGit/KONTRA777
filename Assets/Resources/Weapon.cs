@@ -13,6 +13,7 @@ namespace Resources {
         public int currentAmmo;
         public bool isReloading;
         public AudioClip shootSound;
+        public AudioClip noAmmoSound;
         public float spread;
         public AudioClip reloadSound;
     }

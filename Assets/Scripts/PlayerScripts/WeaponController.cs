@@ -14,6 +14,7 @@ namespace PlayerScripts {
         public PhotonView photonView;
         public AudioSource audioShoot;
         public AudioSource audioReload;
+        public AudioSource audioNoAmoo;
         public ParticleSystem shootParticle;
         private InGameCanvasController canvasController;
         private float reloadTimer;
@@ -42,7 +43,8 @@ namespace PlayerScripts {
         bool Shoot() {
             if (PlayerSoldier.localPlayer.weapon.numOfBullets == 0 &&
                 PlayerSoldier.localPlayer.weapon.currentAmmo == 0) {
-                // TODO sound not amoo
+                audioNoAmoo.clip = PlayerController.weapon.noAmmoSound;
+                audioNoAmoo.Play();
             }
 
             if (PlayerSoldier.localPlayer.weapon.isReloading) return false;
