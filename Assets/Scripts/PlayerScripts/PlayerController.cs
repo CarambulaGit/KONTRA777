@@ -16,6 +16,8 @@ using UnityEditor;
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
         private const float EPSILON = 0.00001f;
+        private const float SLOWDOWN_TIME = 60f;
+        private const float SLOWDOWN_COEF = 0.5f;
         public CircleCollider2D collider;
         public Weapon weapon;
         public Soldier soldier;
@@ -34,10 +36,8 @@ namespace PlayerScripts {
         private InGameCanvasController canvasController;
         private IEnumerator moveSoundsEnumerator;
         [SerializeField] private float health;
-        
-        private int slowdownTime = 60;
-        private float slowdownCoef = 0.5f;
-        private int counter = 0;
+
+        private float slowdownTimer = 0;
 
 
         void Start() {
@@ -95,16 +95,14 @@ namespace PlayerScripts {
             if (posChange.magnitude > 0.1f) {
                 photonView.RPC(nameof(MoveRPC), RpcTarget.All, photonView.ViewID);
             }
-            animSpeed = posChange.magnitude;
-            if (counter > 0)
-            {
-                transform.position += posChange * (moveSpeed * Time.deltaTime) * slowdownCoef;
-                counter--;
-            }
-            else
-            {
-                transform.position += posChange * (moveSpeed * Time.deltaTime);
 
+            animSpeed = posChange.magnitude;
+            if (slowdownTimer > 0) {
+                transform.position += posChange * (moveSpeed * Time.deltaTime) * SLOWDOWN_COEF;
+                slowdownTimer--;
+            }
+            else {
+                transform.position += posChange * (moveSpeed * Time.deltaTime);
             }
         }
 
@@ -181,13 +179,12 @@ namespace PlayerScripts {
         public void OnStartGame() {
             photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
         }
-
-        public void isDamaged()
-        {
-            counter += slowdownTime;
-        }
-
+        
         // InGameCanvasController end  
+
+        public void isDamaged() {
+            slowdownTimer = SLOWDOWN_TIME;
+        }
     }
 }
 
