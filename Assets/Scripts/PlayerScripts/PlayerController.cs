@@ -30,6 +30,7 @@ namespace PlayerScripts {
         public AudioClip[] moveSounds = new AudioClip[2];
         public bool init;
         public bool isDead { get; private set; }
+        public ParticleSystem blood;
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;

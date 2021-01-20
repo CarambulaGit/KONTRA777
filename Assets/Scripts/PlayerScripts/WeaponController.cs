@@ -17,7 +17,7 @@ namespace PlayerScripts {
         public ParticleSystem shootParticle;
         private InGameCanvasController canvasController;
         private float reloadTimer;
-        public ParticleSystem blood;
+       
 
         public static UnityAction IAmReloading;
 
@@ -80,7 +80,7 @@ namespace PlayerScripts {
                 Debug.Log($"Auch! Taken {damage} damage");
                 PlayerSoldier.localPlayer.TakeDamage(damage);
                 PlayerSoldier.localPlayer.playerController.isDamaged();
-                blood.Emit(4);
+                PlayerSoldier.localPlayer.playerController.blood.Emit(4);
 
             }
         }

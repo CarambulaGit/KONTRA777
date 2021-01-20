@@ -326,6 +326,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 975ede5b4df59d640855f7ae0bd3685f, type: 3}
   - {fileID: 8300000, guid: 490270d5837c68e4290cce1c902be8ea, type: 3}
   init: 0
+  blood: {fileID: 5861940216433586527}
   health: 0
 --- !u!114 &4001391294939030087
 MonoBehaviour:
@@ -361,7 +362,6 @@ MonoBehaviour:
   audioShoot: {fileID: 3205587555460700092}
   audioReload: {fileID: 4020794262885119255}
   shootParticle: {fileID: 3520720497089436535}
-  blood: {fileID: 5861940216433586527}
 --- !u!114 &-1122572446260933072
 MonoBehaviour:
   m_ObjectHideFlags: 0
