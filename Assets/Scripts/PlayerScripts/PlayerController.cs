@@ -16,6 +16,8 @@ using UnityEditor;
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
         private const float EPSILON = 0.00001f;
+        private const float SLOWDOWN_TIME = 1f;
+        private const float SLOWDOWN_COEF = 0.5f;
         public CircleCollider2D collider;
         public Weapon weapon;
         public Soldier soldier;
@@ -28,12 +30,16 @@ namespace PlayerScripts {
         public AudioClip[] moveSounds = new AudioClip[2];
         public bool init;
         public bool isDead { get; private set; }
+        public ParticleSystem blood;
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
         private InGameCanvasController canvasController;
         private IEnumerator moveSoundsEnumerator;
         [SerializeField] private float health;
+
+        private float slowdownTimer = 0;
+        private float moveCoef;
 
 
         void Start() {
@@ -91,8 +97,17 @@ namespace PlayerScripts {
             if (posChange.magnitude > 0.1f) {
                 photonView.RPC(nameof(MoveRPC), RpcTarget.All, photonView.ViewID);
             }
+
             animSpeed = posChange.magnitude;
-            transform.position += posChange * (moveSpeed * Time.deltaTime);
+            moveCoef = CalculateMoveCoef();
+            transform.position += posChange * (moveSpeed * Time.deltaTime) * moveCoef;
+            slowdownTimer -= Time.deltaTime;
+           
+        }
+
+        private float CalculateMoveCoef()
+        {
+            return slowdownTimer >= 0 ? SLOWDOWN_COEF : 1f;
         }
 
 
@@ -111,7 +126,7 @@ namespace PlayerScripts {
 
         private PlayerSoldier initPlayerSoldier() {
             var player = new PlayerSoldier(photonView.Owner, photonView.Owner.NickName,
-                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), Instantiate(weapon), soldier, gameObject);
+                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), Instantiate(weapon), soldier, gameObject, this);
             if (photonView.IsMine) {
                 PlayerSoldier.localPlayer = player;
             }
@@ -168,8 +183,12 @@ namespace PlayerScripts {
         public void OnStartGame() {
             photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
         }
-
+        
         // InGameCanvasController end  
+
+        public void isDamaged() {
+            slowdownTimer = SLOWDOWN_TIME;
+        }
     }
 }
 
