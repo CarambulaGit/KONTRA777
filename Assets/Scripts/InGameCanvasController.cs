@@ -77,6 +77,10 @@ public class InGameCanvasController : MonoBehaviour {
     }
 
     private void Tick() {
+        if (PlayerSoldier.localPlayer == null) {
+            return;
+        }
+
         ReloadTick();
         HealthTick();
         AmmoTick();
