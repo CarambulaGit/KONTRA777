@@ -32,7 +32,6 @@ public class InGameCanvasController : MonoBehaviour {
         canvasStatus = CanvasStatus.StartGameMenu;
         OnChangedCanvasStatus();
         SetNecessaryStartGameMenu();
-        WeaponController.IAmReloading += ReloadTimer;
     }
 
     void Update() {
@@ -46,6 +45,7 @@ public class InGameCanvasController : MonoBehaviour {
         if (!init) {
             healthBar.maxValue = PlayerSoldier.localPlayer.soldier.health;
             fill.color = gradient.Evaluate(1f);
+            PlayerSoldier.localPlayer.gOPlayer.GetComponent<WeaponController>().IAmReloading += ReloadTimer;
             init = true;
         }
 

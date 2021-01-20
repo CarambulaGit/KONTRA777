@@ -19,7 +19,7 @@ namespace PlayerScripts {
         private float reloadTimer;
        
 
-        public static UnityAction IAmReloading;
+        public UnityAction IAmReloading;
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
