@@ -16,7 +16,7 @@ using UnityEditor;
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
         private const float EPSILON = 0.00001f;
-        private const float SLOWDOWN_TIME = 60f;
+        private const float SLOWDOWN_TIME = 1f;
         private const float SLOWDOWN_COEF = 0.5f;
         public CircleCollider2D collider;
         public Weapon weapon;
@@ -38,6 +38,7 @@ namespace PlayerScripts {
         [SerializeField] private float health;
 
         private float slowdownTimer = 0;
+        private float moveCoef;
 
 
         void Start() {
@@ -97,13 +98,15 @@ namespace PlayerScripts {
             }
 
             animSpeed = posChange.magnitude;
-            if (slowdownTimer > 0) {
-                transform.position += posChange * (moveSpeed * Time.deltaTime) * SLOWDOWN_COEF;
-                slowdownTimer--;
-            }
-            else {
-                transform.position += posChange * (moveSpeed * Time.deltaTime);
-            }
+            moveCoef = CalculateMoveCoef();
+            transform.position += posChange * (moveSpeed * Time.deltaTime) * moveCoef;
+            slowdownTimer -= Time.deltaTime;
+           
+        }
+
+        private float CalculateMoveCoef()
+        {
+            return slowdownTimer >= 0 ? SLOWDOWN_COEF : 1f;
         }
 
 
