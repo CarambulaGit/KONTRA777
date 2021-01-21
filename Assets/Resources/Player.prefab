@@ -315,6 +315,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collider: {fileID: 146153868253066236}
   weapon: {fileID: 11400000, guid: 49c6a2c1719bee84582e3e15716bf130, type: 2}
+  AK47: {fileID: 11400000, guid: 49c6a2c1719bee84582e3e15716bf130, type: 2}
+  AWP: {fileID: 11400000, guid: f3ad9db2bf490bf4fa3ddc92d2a27dff, type: 2}
+  ShotGun: {fileID: 11400000, guid: bdea58a6bf1e9d34e8fb3fa2a32e1f34, type: 2}
+  P2000: {fileID: 11400000, guid: a8730e42245ebbd43aa31965123f3f74, type: 2}
   soldier: {fileID: 11400000, guid: 157333b3708c03343b24a5a7d7063cfa, type: 2}
   moveSpeed: 6
   animator: {fileID: 2035651316840139865}
@@ -328,6 +332,8 @@ MonoBehaviour:
   init: 0
   blood: {fileID: 5861940216433586527}
   health: 0
+  arsenal: []
+  currIdWeapon: 0
 --- !u!114 &4001391294939030087
 MonoBehaviour:
   m_ObjectHideFlags: 0

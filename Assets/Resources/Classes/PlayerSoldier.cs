@@ -75,7 +75,9 @@ namespace Resources.Classes {
         public void TakeDamage(float damage) {
             this.health = Mathf.Clamp(health - damage, 0, soldier.health);
         }
-
+        public void ChangeWeapon(Weapon weapon) {
+            this.weapon = weapon;
+        }
         public override string ToString() {
             return $"{photonPlayer}\n{nickname}\n{health}\n{team}\n";
         }

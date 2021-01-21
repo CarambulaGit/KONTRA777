@@ -5,6 +5,7 @@ namespace Resources {
     [CreateAssetMenu(fileName = "New Weapon", menuName = "ScriptableObject/Weapon", order = 1)]
     public class Weapon : ScriptableObject {
         public string name;
+        public int weaponID;
         // private Sprite sprite; // todo 
         public float damage;
         public int bulletsInMagazine;
