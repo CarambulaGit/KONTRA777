@@ -18,9 +18,9 @@ namespace PlayerScripts {
         public ParticleSystem shootParticle;
         private InGameCanvasController canvasController;
         private float reloadTimer;
-        public ParticleSystem blood;
+       
 
-        public static UnityAction IAmReloading;
+        public UnityAction IAmReloading;
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
@@ -81,9 +81,9 @@ namespace PlayerScripts {
             if (PlayerSoldier.localPlayer.photonView.ViewID == viewIdBeenDamaged) {
                 Debug.Log($"Auch! Taken {damage} damage");
                 PlayerSoldier.localPlayer.TakeDamage(damage);
-                blood.Emit(5);
-
+                PlayerSoldier.localPlayer.playerController.isDamaged();
             }
+            PlayerSoldier.FindPSByPhotonViewID(viewIdBeenDamaged).playerController.blood.Emit(4);
         }
 
         [PunRPC]
@@ -93,7 +93,6 @@ namespace PlayerScripts {
                 audioShoot.clip = PlayerController.weapon.shootSound;
                 audioShoot.Play();
                 shootParticle.Emit(1);
-
             }
         }
 

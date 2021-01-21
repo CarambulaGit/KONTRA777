@@ -26,18 +26,16 @@ public class InGameCanvasController : MonoBehaviour {
     public CanvasStatus canvasStatus;
     private bool init;
     private bool isReloading;
+    private PlayerController localPayerPC;
 
     void Start() {
         canvasStatus = CanvasStatus.StartGameMenu;
         OnChangedCanvasStatus();
         SetNecessaryStartGameMenu();
-        WeaponController.IAmReloading += ReloadTimer;
     }
 
     void Update() {
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
             canvasStatus = canvasStatus == CanvasStatus.EscMenu ? 0 : CanvasStatus.EscMenu;
             OnChangedCanvasStatus();
         }
@@ -47,6 +45,7 @@ public class InGameCanvasController : MonoBehaviour {
         if (!init) {
             healthBar.maxValue = PlayerSoldier.localPlayer.soldier.health;
             fill.color = gradient.Evaluate(1f);
+            PlayerSoldier.localPlayer.gOPlayer.GetComponent<WeaponController>().IAmReloading += ReloadTimer;
             init = true;
         }
 
@@ -64,6 +63,11 @@ public class InGameCanvasController : MonoBehaviour {
     }
 
     public void OnStartGame() {
+        if (PlayerSoldier.localPlayer == null) return;
+        if (localPayerPC == null) {
+            localPayerPC = PlayerSoldier.localPlayer.gOPlayer.GetComponent<PlayerController>();
+        }
+
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().OnStartGame();
     }
 
@@ -72,34 +76,36 @@ public class InGameCanvasController : MonoBehaviour {
         sGMOthers.SetActive(!PhotonNetwork.IsMasterClient);
     }
 
-    public void ReloadTick() {
-        if (!PlayerSoldier.localPlayer.weapon.isReloading)
-        {
-            reloadTimer.fillAmount = 1;
-            reloadTimer.enabled = false;
+    private void Tick() {
+        if (PlayerSoldier.localPlayer == null) {
+            return;
         }
-    }
 
-    public void Tick() {
         ReloadTick();
         HealthTick();
         AmmoTick();
     }
 
-    public void HealthTick()
-    {
+    private void ReloadTick() {
+        if (!PlayerSoldier.localPlayer.weapon.isReloading) {
+            reloadTimer.fillAmount = 0;
+            reloadTimer.gameObject.SetActive(false);
+        }
+    }
+
+
+    private void HealthTick() {
         healthBar.value = PlayerSoldier.localPlayer.health;
         fill.color = gradient.Evaluate(healthBar.normalizedValue);
     }
 
-    public void AmmoTick() {
+    private void AmmoTick() {
         CurrentAmmo.text = PlayerSoldier.localPlayer.weapon.currentAmmo.ToString();
         NumOfBullets.text = PlayerSoldier.localPlayer.weapon.numOfBullets.ToString();
     }
 
-    public void ReloadTimer() {
-        if (PlayerSoldier.localPlayer.weapon.isReloading) reloadTimer.enabled = true;
-        reloadTimer.fillAmount -= Time.deltaTime/PlayerSoldier.localPlayer.weapon.reloadTime;
+    private void ReloadTimer() {
+        if (PlayerSoldier.localPlayer.weapon.isReloading) reloadTimer.gameObject.SetActive(true);
+        reloadTimer.fillAmount += Time.deltaTime / PlayerSoldier.localPlayer.weapon.reloadTime;
     }
-
 }

@@ -39,10 +39,10 @@ MonoBehaviour:
   - Fire
   - GiveDamageRPC
   - KillRPC
-  - RespawnSpaceship
-  - StartGameRPC
-  - ShootRPC
   - MoveRPC
+  - RespawnSpaceship
+  - ShootRPC
+  - StartGameRPC
   DisableAutoOpenWizard: 1
-  ShowSettings: 1
+  ShowSettings: 0
   DevRegionSetOnce: 1

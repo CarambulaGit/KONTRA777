@@ -5,6 +5,7 @@ using System.Text;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using PlayerScripts;
 using UnityEngine;
 
 namespace Resources.Classes {
@@ -19,6 +20,7 @@ namespace Resources.Classes {
         private PhotonTeam team;
         public GameObject gOPlayer;
         public PhotonView photonView;
+        public PlayerController playerController;
 
         public static PlayerSoldier FindPSByPhotonPlayer(Player player) {
             return players.First(somePlayer => somePlayer.photonPlayer.Equals(player));
@@ -32,23 +34,29 @@ namespace Resources.Classes {
             return players.First(somePlayer => somePlayer.nickname.Equals(nickname));
         }
 
-        public static PlayerSoldier FindPSByPhotonView(PhotonView pv) {
-            return players.First(somePlayer => somePlayer.photonView.ViewID == pv.ViewID);
+        public static PlayerSoldier FindPSByPhotonViewID(int photonViewID) {
+            return players.First(somePlayer => somePlayer.photonView.ViewID == photonViewID);
         }
+
+        public static PlayerSoldier FindPSByPhotonView(PhotonView pv) {
+            return FindPSByPhotonViewID(pv.ViewID);
+        }
+
 
         public static List<PlayerSoldier> GetAllPSByTeam(PhotonTeam team) {
             return players.FindAll(somePlayer => somePlayer.team.Equals(team));
         }
 
         public static bool PlayersIsDead(List<PlayerSoldier> players) {
-           return players.All(somePlayer => somePlayer.IsDead());
+            return players.All(somePlayer => somePlayer.IsDead());
         }
 
         public static bool TeamIsDead(PhotonTeam team) {
             return PlayersIsDead(GetAllPSByTeam(team));
         }
 
-        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier, GameObject gOPlayer) {
+        public PlayerSoldier(Player photonPlayer, string nickname, PhotonTeam team, Weapon weapon, Soldier soldier,
+            GameObject gOPlayer, PlayerController playerController) {
             this.photonPlayer = photonPlayer;
             this.nickname = nickname;
             this.team = team;
@@ -57,6 +65,7 @@ namespace Resources.Classes {
             this.soldier = soldier;
             this.health = soldier.health;
             this.photonView = this.gOPlayer.GetPhotonView();
+            this.playerController = playerController;
             players.Add(this);
         }
 
@@ -64,7 +73,7 @@ namespace Resources.Classes {
         public void Kill() => this.health = 0;
 
         public void TakeDamage(float damage) {
-            this.health = Mathf.Clamp(health - damage, 0, soldier.health); 
+            this.health = Mathf.Clamp(health - damage, 0, soldier.health);
         }
 
         public override string ToString() {
