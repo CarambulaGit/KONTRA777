@@ -12,6 +12,8 @@ using Unity.Collections;
 using UnityEngine;
 using System.IO;
 using UnityEditor;
+using UnityEngine.Events;
+using System;
 
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable {
@@ -20,6 +22,10 @@ namespace PlayerScripts {
         private const float SLOWDOWN_COEF = 0.5f;
         public CircleCollider2D collider;
         public Weapon weapon;
+        public Weapon AK47;
+        public Weapon AWP;
+        public Weapon ShotGun;
+        public Weapon P2000;
         public Soldier soldier;
         public float moveSpeed;
         public Animator animator;
@@ -41,6 +47,10 @@ namespace PlayerScripts {
         private float slowdownTimer = 0;
         private float moveCoef;
 
+        public List<Weapon> arsenal;
+        public event Action<int> IAmswitchWeapon;
+        public int currIdWeapon;
+
 
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
@@ -48,6 +58,7 @@ namespace PlayerScripts {
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
             moveSoundsEnumerator = moveSounds.GetEnumerator();
+            AddIntanceOfWeaponToArsenal();
         }
 
         void FixedUpdate() {
@@ -70,6 +81,7 @@ namespace PlayerScripts {
 
             Move(out moveAnimSpeed);
             Animate();
+            SelecteWeapon();
         }
 
         private void SynchronizeNetworkVariables() {
@@ -81,12 +93,32 @@ namespace PlayerScripts {
             }
         }
 
+        private void AddIntanceOfWeaponToArsenal() {
+            arsenal.Add(Instantiate(P2000));
+            arsenal.Add(Instantiate(ShotGun));
+            arsenal.Add(Instantiate(AK47));
+            arsenal.Add(Instantiate(AWP));
+        }
+
+        public Weapon GetElementFromArsenalById(int ID) {
+            var i = 0;
+            foreach (var weapon in arsenal) {
+                if (weapon.weaponID == ID) {
+                    return arsenal[i];
+                }
+                i++;    
+            }
+            return arsenal[0];
+        }
+
         private void Kill() {
             photonView.RPC(nameof(KillRPC), RpcTarget.AllBuffered, photonView.ViewID);
             health = PlayerSoldier.localPlayer.health;
             moveAnimSpeed = 0;
             Animate();
         }
+
+
 
         private void Move(out float animSpeed) {
             var posChange = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
@@ -126,7 +158,7 @@ namespace PlayerScripts {
 
         private PlayerSoldier initPlayerSoldier() {
             var player = new PlayerSoldier(photonView.Owner, photonView.Owner.NickName,
-                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), Instantiate(weapon), soldier, gameObject, this);
+                PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), arsenal[0], soldier, gameObject, this);
             if (photonView.IsMine) {
                 PlayerSoldier.localPlayer = player;
             }
@@ -188,6 +220,29 @@ namespace PlayerScripts {
 
         public void isDamaged() {
             slowdownTimer = SLOWDOWN_TIME;
+        }
+
+        private void SelecteWeapon() {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                currIdWeapon = 0;
+                IAmswitchWeapon?.Invoke(currIdWeapon);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2)) {
+                currIdWeapon = 1;
+                IAmswitchWeapon?.Invoke(currIdWeapon);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                currIdWeapon = 2;
+                IAmswitchWeapon?.Invoke(currIdWeapon);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4)) {
+                currIdWeapon = 3;
+                IAmswitchWeapon?.Invoke(currIdWeapon);;
+            }
+
+
         }
     }
 }
