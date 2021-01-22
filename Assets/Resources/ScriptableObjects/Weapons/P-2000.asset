@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: P-2000
   m_EditorClassIdentifier: 
   name: 
-  weaponID: 0
+  weaponID: 1
   damage: 0
-  bulletsInMagazine: 0
-  numOfBullets: 0
-  reloadTime: 0
-  currentAmmo: 0
+  bulletsInMagazine: 15
+  numOfBullets: 60
+  reloadTime: 4
+  currentAmmo: 15
   isReloading: 0
   shootSound: {fileID: 0}
   noAmmoSound: {fileID: 0}
