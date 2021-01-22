@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: P-2000
   m_EditorClassIdentifier: 
   name: 
-  weaponID: 0
+  weaponID: 1
   damage: 0
   bulletsInMagazine: 0
   numOfBullets: 0

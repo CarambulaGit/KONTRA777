@@ -8,9 +8,14 @@ namespace ServerScripts
 	public class LobbyManager : MonoBehaviourPunCallbacks {
 		public InputField nicknameInputField;
 		public Text logText;
+		public Texture2D cursorImage;
 		public string roomName = "default";
 		private string path;
 		private string nicknameFileName = "Nickname.txt";
+
+		public CursorMode cursorMode = CursorMode.Auto;
+		public Vector2 hotSpot = Vector2.zero;
+
 
 		[Range(1, 8)] public int numOfPlayers = 4;
 
@@ -25,7 +30,9 @@ namespace ServerScripts
 			PhotonNetwork.GameVersion = "1";
 			PhotonNetwork.AutomaticallySyncScene = true;
 			PhotonNetwork.ConnectUsingSettings();
-		}
+
+			Cursor.SetCursor(cursorImage, hotSpot, cursorMode);
+	}
 
 		private void Log(string message) { logText.text += "\n" + message; }
 

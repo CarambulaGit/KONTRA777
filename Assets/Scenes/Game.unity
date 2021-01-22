@@ -276,6 +276,7 @@ MonoBehaviour:
   CurrentAmmo: {fileID: 1486783168}
   NumOfBullets: {fileID: 1831665206}
   canvasStatus: 0
+  cursorImage: {fileID: 2800000, guid: 052435f79af1d0540bc04932d16e5705, type: 3}
 --- !u!1 &23983729
 GameObject:
   m_ObjectHideFlags: 0
