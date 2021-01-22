@@ -30,7 +30,7 @@ namespace ServerScripts {
         private GameObject AddNewPlayer() {
             var teamsList = ptm.GetAvailableTeams().ToList();
             var minTeamMembers = teamsList.Min(team => ptm.GetTeamMembersCount(team));
-            var myTeam = teamsList.First(team => ptm.GetTeamMembersCount(team) == minTeamMembers);
+            var myTeam = teamsList.First(team => ptm.GetTeamMembersCount(team) == minTeamMembers) ?? teamsList[0];
             PhotonNetwork.LocalPlayer.JoinTeam(myTeam);
             return PhotonNetwork.Instantiate(playerPrefab.name,
                 SpawnPoints[myTeam.Code - 1].position, Quaternion.identity);
