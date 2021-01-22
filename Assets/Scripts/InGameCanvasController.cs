@@ -21,13 +21,13 @@ public class InGameCanvasController : MonoBehaviour {
     public Gradient gradient;
     public Image fill;
     public Image reloadTimer;
+    public Text healthText;
     public Text CurrentAmmo;
     public Text NumOfBullets;
     public CanvasStatus canvasStatus;
     public Texture2D cursorImage;
     private bool init;
     private bool isReloading;
-    private PlayerController localPayerPC;
 
     public CursorMode cursorMode = CursorMode.Auto;
 
@@ -69,11 +69,7 @@ public class InGameCanvasController : MonoBehaviour {
 
     public void OnStartGame() {
         if (PlayerSoldier.localPlayer == null) return;
-        if (localPayerPC == null) {
-            localPayerPC = PlayerSoldier.localPlayer.gOPlayer.GetComponent<PlayerController>();
-        }
-
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().OnStartGame();
+        PlayerSoldier.localPlayer.playerController.OnStartGame();
     }
 
     private void SetNecessaryStartGameMenu() {
@@ -100,6 +96,7 @@ public class InGameCanvasController : MonoBehaviour {
 
 
     private void HealthTick() {
+        healthText.text = PlayerSoldier.localPlayer.health.ToString();
         healthBar.value = PlayerSoldier.localPlayer.health;
         fill.color = gradient.Evaluate(healthBar.normalizedValue);
     }
