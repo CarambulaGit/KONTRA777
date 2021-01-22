@@ -43,7 +43,6 @@ public class InGameCanvasController : MonoBehaviour {
         if (PlayerSoldier.localPlayer == null) return;
 
         if (!init) {
-            healthText.text = PlayerSoldier.localPlayer.soldier.health.ToString();
             healthBar.maxValue = PlayerSoldier.localPlayer.soldier.health;
             fill.color = gradient.Evaluate(1f);
             PlayerSoldier.localPlayer.gOPlayer.GetComponent<WeaponController>().IAmReloading += ReloadTimer;
@@ -92,6 +91,7 @@ public class InGameCanvasController : MonoBehaviour {
 
 
     private void HealthTick() {
+        healthText.text = PlayerSoldier.localPlayer.health.ToString();
         healthBar.value = PlayerSoldier.localPlayer.health;
         fill.color = gradient.Evaluate(healthBar.normalizedValue);
     }
