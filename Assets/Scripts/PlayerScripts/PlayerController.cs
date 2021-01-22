@@ -48,6 +48,12 @@ namespace PlayerScripts {
         private float moveCoef;
 
         public List<Weapon> arsenal;
+        private KeyCode[] SwitchWeponKey = {
+            KeyCode.Alpha1,
+            KeyCode.Alpha2,
+            KeyCode.Alpha3,
+            KeyCode.Alpha4
+        };
         public event Action<int> IAmswitchWeapon;
         public int currIdWeapon;
 
@@ -81,7 +87,7 @@ namespace PlayerScripts {
 
             Move(out moveAnimSpeed);
             Animate();
-            SelecteWeapon();
+            SelecteWeapon();//kek
         }
 
         private void SynchronizeNetworkVariables() {
@@ -223,35 +229,26 @@ namespace PlayerScripts {
         }
 
         private void SelecteWeapon() {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                currIdWeapon = 0;
-                IAmswitchWeapon?.Invoke(currIdWeapon);
+            for (int i = 0; i < SwitchWeponKey.Length; i++) {
+                if (Input.GetKeyDown(SwitchWeponKey[i]))
+                {
+                    currIdWeapon = i + 1;
+                    IAmswitchWeapon?.Invoke(currIdWeapon);
+                }
+                    
             }
-            if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                currIdWeapon = 1;
-                IAmswitchWeapon?.Invoke(currIdWeapon);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                currIdWeapon = 2;
-                IAmswitchWeapon?.Invoke(currIdWeapon);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha4)) {
-                currIdWeapon = 3;
-                IAmswitchWeapon?.Invoke(currIdWeapon);;
-            }
-
-
         }
-    }
 }
 
-public static class IEnumeratorExtension {
-    public static void MoveNextCycled(this IEnumerator enumerator) {
-        if (!enumerator.MoveNext()) {
-            enumerator.Reset();
-            enumerator.MoveNext();
+    public static class IEnumeratorExtension
+    {
+        public static void MoveNextCycled(this IEnumerator enumerator)
+        {
+            if (!enumerator.MoveNext())
+            {
+                enumerator.Reset();
+                enumerator.MoveNext();
+            }
         }
     }
 }
