@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: ShotGun
   weaponID: 2
-  damage: 35
-  bulletsInMagazine: 7
-  numOfBullets: 35
-  reloadTime: 1.2
-  currentAmmo: 7
+  damage: 20
+  bulletsInMagazine: 8
+  numOfBullets: 32
+  reloadTime: 1
+  currentAmmo: 8
   isReloading: 0
-  shootSound: {fileID: 0}
+  shootSound: {fileID: 8300000, guid: 490270d5837c68e4290cce1c902be8ea, type: 3}
   noAmmoSound: {fileID: 0}
   spread: 0
   reloadSound: {fileID: 0}

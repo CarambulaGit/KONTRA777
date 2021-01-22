@@ -1410,7 +1410,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nicknameInputField: {fileID: 1602372438}
   logText: {fileID: 180824342}
+  cursorImage: {fileID: 2800000, guid: 8b5f186dcba39174db5a9f84b3da47cb, type: 3}
   roomName: default
+  cursorMode: 0
+  hotSpot: {x: 0, y: 0}
   numOfPlayers: 8
 --- !u!4 &1992702078
 Transform:

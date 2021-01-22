@@ -25,13 +25,18 @@ public class InGameCanvasController : MonoBehaviour {
     public Text CurrentAmmo;
     public Text NumOfBullets;
     public CanvasStatus canvasStatus;
+    public Texture2D cursorImage;
     private bool init;
     private bool isReloading;
+
+    public CursorMode cursorMode = CursorMode.Auto;
 
     void Start() {
         canvasStatus = CanvasStatus.StartGameMenu;
         OnChangedCanvasStatus();
         SetNecessaryStartGameMenu();
+
+        Cursor.SetCursor(cursorImage, new Vector2(29, 35), cursorMode);
     }
 
     void Update() {

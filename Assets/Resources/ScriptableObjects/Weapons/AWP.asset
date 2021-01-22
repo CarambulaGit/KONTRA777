@@ -17,10 +17,10 @@ MonoBehaviour:
   damage: 100
   bulletsInMagazine: 10
   numOfBullets: 30
-  reloadTime: 5
+  reloadTime: 4
   currentAmmo: 10
   isReloading: 0
-  shootSound: {fileID: 0}
+  shootSound: {fileID: 8300000, guid: 2767d58abc60c1d49ae810de91512d7d, type: 3}
   noAmmoSound: {fileID: 0}
-  spread: 0
+  spread: 10
   reloadSound: {fileID: 0}
