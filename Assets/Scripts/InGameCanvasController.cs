@@ -21,6 +21,7 @@ public class InGameCanvasController : MonoBehaviour {
     public Gradient gradient;
     public Image fill;
     public Image reloadTimer;
+    public Text healthText;
     public Text CurrentAmmo;
     public Text NumOfBullets;
     public CanvasStatus canvasStatus;
@@ -43,6 +44,7 @@ public class InGameCanvasController : MonoBehaviour {
         if (PlayerSoldier.localPlayer == null) return;
 
         if (!init) {
+            healthText.text = PlayerSoldier.localPlayer.soldier.health.ToString();
             healthBar.maxValue = PlayerSoldier.localPlayer.soldier.health;
             fill.color = gradient.Evaluate(1f);
             PlayerSoldier.localPlayer.gOPlayer.GetComponent<WeaponController>().IAmReloading += ReloadTimer;
