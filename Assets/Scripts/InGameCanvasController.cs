@@ -27,7 +27,6 @@ public class InGameCanvasController : MonoBehaviour {
     public CanvasStatus canvasStatus;
     private bool init;
     private bool isReloading;
-    private PlayerController localPayerPC;
 
     void Start() {
         canvasStatus = CanvasStatus.StartGameMenu;
@@ -66,11 +65,7 @@ public class InGameCanvasController : MonoBehaviour {
 
     public void OnStartGame() {
         if (PlayerSoldier.localPlayer == null) return;
-        if (localPayerPC == null) {
-            localPayerPC = PlayerSoldier.localPlayer.gOPlayer.GetComponent<PlayerController>();
-        }
-
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().OnStartGame();
+        PlayerSoldier.localPlayer.playerController.OnStartGame();
     }
 
     private void SetNecessaryStartGameMenu() {
