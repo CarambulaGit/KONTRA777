@@ -41,6 +41,7 @@ namespace PlayerScripts {
         private PhotonView photonView;
         private float moveAnimSpeed;
         private InGameCanvasController canvasController;
+        private RoundManager roundManager;
         private IEnumerator moveSoundsEnumerator;
         [SerializeField] private float health;
 
@@ -48,12 +49,14 @@ namespace PlayerScripts {
         private float moveCoef;
 
         public List<Weapon> arsenal;
+
         private KeyCode[] SwitchWeponKey = {
             KeyCode.Alpha1,
             KeyCode.Alpha2,
             KeyCode.Alpha3,
             KeyCode.Alpha4
         };
+
         public event Action<int> IAmswitchWeapon;
         public int currIdWeapon;
 
@@ -61,6 +64,7 @@ namespace PlayerScripts {
         void Start() {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<InGameManager>();
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
+            roundManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<RoundManager>();
             photonView = GetComponent<PhotonView>();
             NicknameText.SetText(photonView.Owner.NickName);
             moveSoundsEnumerator = moveSounds.GetEnumerator();
@@ -87,7 +91,7 @@ namespace PlayerScripts {
 
             Move(out moveAnimSpeed);
             Animate();
-            SelecteWeapon();//kek
+            SelectWeapon(); //kek
         }
 
         private void SynchronizeNetworkVariables() {
@@ -107,14 +111,7 @@ namespace PlayerScripts {
         }
 
         public Weapon GetElementFromArsenalById(int ID) {
-            var i = 0;
-            foreach (var weapon in arsenal) {
-                if (weapon.weaponID == ID) {
-                    return arsenal[i];
-                }
-                i++;    
-            }
-            return arsenal[0];
+            return arsenal.First(weapon => weapon.weaponID == ID) ?? arsenal[0];
         }
 
         private void Kill() {
@@ -124,6 +121,15 @@ namespace PlayerScripts {
             Animate();
         }
 
+        [PunRPC]
+        void KillRPC(int viewId) {
+            if (photonView.ViewID == viewId) {
+                collider.enabled = false;
+                sprite.sortingOrder = 1;
+                audio.clip = deathSound;
+                audio.Play();
+            }
+        }
 
 
         private void Move(out float animSpeed) {
@@ -138,13 +144,22 @@ namespace PlayerScripts {
 
             animSpeed = posChange.magnitude;
             moveCoef = CalculateMoveCoef();
-            transform.position += posChange * (moveSpeed * Time.deltaTime) * moveCoef;
+            transform.position += posChange * moveSpeed * moveCoef * Time.deltaTime;
             slowdownTimer -= Time.deltaTime;
-           
         }
 
-        private float CalculateMoveCoef()
-        {
+        [PunRPC]
+        private void MoveRPC(int viewIdWhoMove) {
+            if (photonView.ViewID == viewIdWhoMove) {
+                if (!audio.isPlaying) {
+                    moveSoundsEnumerator.MoveNextCycled();
+                    audio.clip = moveSoundsEnumerator.Current as AudioClip;
+                    audio.Play();
+                }
+            }
+        }
+
+        private float CalculateMoveCoef() {
             return slowdownTimer >= 0 ? SLOWDOWN_COEF : 1f;
         }
 
@@ -185,27 +200,6 @@ namespace PlayerScripts {
         void OnCollisionEnter2D(Collision2D other) { }
 
 
-        [PunRPC]
-        void KillRPC(int viewId) {
-            if (photonView.ViewID == viewId) {
-                collider.enabled = false;
-                sprite.sortingOrder = 1;
-                audio.clip = deathSound;
-                audio.Play();
-            }
-        }
-
-        [PunRPC]
-        private void MoveRPC(int viewIdWhoMove) {
-            if (photonView.ViewID == viewIdWhoMove) {
-                if (!audio.isPlaying) {
-                    moveSoundsEnumerator.MoveNextCycled();
-                    audio.clip = moveSoundsEnumerator.Current as AudioClip;
-                    audio.Play();
-                }
-            }
-        }
-
         // InGameCanvasController start
 
         [PunRPC]
@@ -221,31 +215,35 @@ namespace PlayerScripts {
         public void OnStartGame() {
             photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
         }
-        
+
         // InGameCanvasController end  
 
         public void isDamaged() {
             slowdownTimer = SLOWDOWN_TIME;
         }
 
-        private void SelecteWeapon() {
+        private void SelectWeapon() {
             for (int i = 0; i < SwitchWeponKey.Length; i++) {
-                if (Input.GetKeyDown(SwitchWeponKey[i]))
-                {
+                if (Input.GetKeyDown(SwitchWeponKey[i])) {
                     currIdWeapon = i + 1;
                     IAmswitchWeapon?.Invoke(currIdWeapon);
                 }
-                    
             }
         }
-}
+        
+        public void SetDefaultState() {
+            transform.position = gameManager.SpawnPoints[PlayerSoldier.localPlayer.team.Code - 1].position;
+            PlayerSoldier.localPlayer.weapon = Instantiate(weapon);
+            PlayerSoldier.localPlayer.health = soldier.health;
+            isDead = false;
+            collider.enabled = true;
+            sprite.sortingOrder = 2;
+        }
+    }
 
-    public static class IEnumeratorExtension
-    {
-        public static void MoveNextCycled(this IEnumerator enumerator)
-        {
-            if (!enumerator.MoveNext())
-            {
+    public static class IEnumeratorExtension {
+        public static void MoveNextCycled(this IEnumerator enumerator) {
+            if (!enumerator.MoveNext()) {
                 enumerator.Reset();
                 enumerator.MoveNext();
             }
