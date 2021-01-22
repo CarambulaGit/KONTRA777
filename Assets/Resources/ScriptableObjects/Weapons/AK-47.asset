@@ -24,3 +24,5 @@ MonoBehaviour:
   noAmmoSound: {fileID: 8300000, guid: 730032a7cd706cc42b5cebc6e868fcb4, type: 3}
   spread: 5
   reloadSound: {fileID: 8300000, guid: df4985c0818d18749a8b0f92c5c6e394, type: 3}
+  fireRate: 10
+  isAutomatic: 1

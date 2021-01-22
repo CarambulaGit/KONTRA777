@@ -15,7 +15,9 @@ namespace Resources {
         public bool isReloading;
         public AudioClip shootSound;
         public AudioClip noAmmoSound;
-        public float spread;
+        public float spread; // range fo spread after 100 m
         public AudioClip reloadSound;
+        public float fireRate; // shoots in second
+        public bool isAutomatic;
     }
 }
