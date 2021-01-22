@@ -3,6 +3,7 @@ using Resources.Classes;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using UnityEngine;
 
@@ -15,6 +16,10 @@ public class RoundManager : MonoBehaviour {
     }
 
     void Update() {
+        if (!PhotonNetwork.IsMasterClient) {
+            return;
+        }
+
         SetDefaultValues(); // todo remove this when players wouldn't connecting while round is going
         foreach (var teamID in teamsIsAlive.Keys.ToList()) {
             ptm.TryGetTeamByCode(teamID, out var team);
