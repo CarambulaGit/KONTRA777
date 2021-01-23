@@ -24,14 +24,22 @@ public class InGameCanvasController : MonoBehaviour {
     public Text healthText;
     public Text CurrentAmmo;
     public Text NumOfBullets;
+    public Text minutesText;
+    public Text secondsText;
     public CanvasStatus canvasStatus;
     public Texture2D cursorImage;
     private bool init;
     private bool isReloading;
 
+    public const float minutesStart = 2;
+    public float currSecond;
+    public float currMinutes;
+
     public CursorMode cursorMode = CursorMode.Auto;
 
     void Start() {
+        currMinutes = minutesStart;
+        currSecond = 0;
         canvasStatus = CanvasStatus.StartGameMenu;
         OnChangedCanvasStatus();
         SetNecessaryStartGameMenu();
@@ -48,6 +56,7 @@ public class InGameCanvasController : MonoBehaviour {
         if (PlayerSoldier.localPlayer == null) return;
 
         if (!init) {
+           
             healthBar.maxValue = PlayerSoldier.localPlayer.soldier.health;
             fill.color = gradient.Evaluate(1f);
             PlayerSoldier.localPlayer.gOPlayer.GetComponent<WeaponController>().IAmReloading += ReloadTimer;
@@ -85,6 +94,7 @@ public class InGameCanvasController : MonoBehaviour {
         ReloadTick();
         HealthTick();
         AmmoTick();
+        TimerTick();
     }
 
     private void ReloadTick() {
@@ -94,6 +104,26 @@ public class InGameCanvasController : MonoBehaviour {
         }
     }
 
+    public void TimerTick()
+    {
+        if (currMinutes <= 0 && currSecond <= 0) return;
+        if (currSecond <= 0) {
+            currMinutes--;
+            currSecond = 60;
+            if(currMinutes < 10) minutesText.text = "0"+currMinutes.ToString();
+            minutesText.text = currMinutes.ToString();
+        }
+        currSecond -= Time.deltaTime;
+        if (currSecond < 10) {
+            if (currMinutes == 0) {
+                secondsText.color = new Color(255,0,0);
+                minutesText.color = new Color(255, 0, 0);
+            } 
+            secondsText.text = "0"+System.Math.Round(currSecond).ToString();
+            return;
+        }
+        secondsText.text = System.Math.Round(currSecond).ToString();
+    }
 
     private void HealthTick() {
         healthText.text = PlayerSoldier.localPlayer.health.ToString();
@@ -111,3 +141,5 @@ public class InGameCanvasController : MonoBehaviour {
         reloadTimer.fillAmount += Time.deltaTime / PlayerSoldier.localPlayer.weapon.reloadTime;
     }
 }
+
+

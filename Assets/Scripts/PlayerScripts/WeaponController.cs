@@ -45,7 +45,9 @@ namespace PlayerScripts {
             }
 
             if (Input.GetButtonDown("Fire1") ||
-                Input.GetButton("Fire1") && PlayerSoldier.localPlayer.weapon.isAutomatic) Shoot();
+                Input.GetButton("Fire1") && PlayerSoldier.localPlayer.weapon.isAutomatic) { 
+                Shoot();
+            }
         }
 
         bool Shoot() {
@@ -59,7 +61,6 @@ namespace PlayerScripts {
             if (shootIntervalTimer < 1 / PlayerSoldier.localPlayer.weapon.fireRate) {
                 return false;
             }
-
             PlayerSoldier.localPlayer.weapon.currentAmmo--;
             shootIntervalTimer = 0;
             var rand = Spreading(PlayerSoldier.localPlayer.weapon.spread);
