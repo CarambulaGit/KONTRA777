@@ -11,10 +11,10 @@ using System.Collections.Generic;
 namespace PlayerScripts {
     public class WeaponController : MonoBehaviour {
         public PlayerController PlayerController;
+        public GameObject ShootSoundPoint;
         public Transform firePoint;
         public LineRenderer lineRenderer;
         public PhotonView photonView;
-        public AudioSource audioShoot;
         public AudioSource audioReload;
         public AudioSource audioNoAmoo;
         public ParticleSystem shootParticle;
@@ -27,7 +27,6 @@ namespace PlayerScripts {
 
         void Start() {
             canvasController = GameObject.FindGameObjectWithTag("InGameCanvas").GetComponent<InGameCanvasController>();
-            audioShoot.clip = PlayerController.weapon.shootSound;
             PlayerController.IAmswitchWeapon += PlayerController_IAmswitchWeapon;
         }
 
@@ -106,10 +105,22 @@ namespace PlayerScripts {
         private void ShootRPC(int viewIdWhoShooted, Vector3 startPos, Vector3 finishPos) {
             if (photonView.ViewID == viewIdWhoShooted) {
                 StartCoroutine(AnimateShoot(startPos, finishPos));
-                audioShoot.clip = PlayerController.weapon.shootSound;
-                audioShoot.Play();
-                shootParticle.Emit(1);
+                StartCoroutine(ShootSoundManager());
             }
+        }
+
+        IEnumerator ShootSoundManager()
+        {
+            AudioSource source = ShootSoundPoint.AddComponent<AudioSource>();
+
+            source.clip = PlayerController.weapon.shootSound;
+            source.minDistance = 1;
+            source.maxDistance = 50;
+            source.volume = 0.5f;
+            source.Play();
+
+            yield return new WaitForSeconds(source.clip.length);
+            Destroy(source);
         }
 
         IEnumerator AnimateShoot(Vector3 startPos, Vector3 finishPos) {
