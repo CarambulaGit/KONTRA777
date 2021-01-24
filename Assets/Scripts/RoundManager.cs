@@ -8,10 +8,17 @@ using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RoundManager : MonoBehaviour, IOnEventCallback {
     public PhotonTeamsManager ptm;
+    public event Action<float> startTimer;
+    public float timeOfRound = 120;
+    public bool timerIsRunning;
     private Dictionary<byte, bool> teamsIsAlive = new Dictionary<byte, bool>();
+
+    public int redTeamScore { get; set; }
+    public int blueTeamScore { get; set; }
 
     void Start() {
         SetDefaultValues();
@@ -37,13 +44,19 @@ public class RoundManager : MonoBehaviour, IOnEventCallback {
             if (PlayerSoldier.TeamIsDead(team)) {
                 teamsIsAlive[teamID] = false;
                 Debug.Log($"{team.Name} team is lose");
+                redTeamScore++;
             }
             else if (teamsIsAlive.Values.Count(val => val) == 1) {
                 Debug.Log($"{team.Name} team is win");
                 PhotonNetwork.RaiseEvent(0, null, new RaiseEventOptions() {Receivers = ReceiverGroup.All},
                     new SendOptions() {Reliability = true});
+                blueTeamScore++;
                 // todo calculate rounds stats
             }
+            if (redTeamScore > 15 || blueTeamScore > 15) { 
+                //start new game 
+            }
+
         }
     }
 
@@ -61,6 +74,12 @@ public class RoundManager : MonoBehaviour, IOnEventCallback {
             teamsIsAlive.Add(team.Code, true);
         }
     }
+
+    public void StartTimerTick() {
+        timerIsRunning = true;
+        startTimer?.Invoke(timeOfRound);
+    }
+
 
     private void StartNewRound() {
         Debug.Log("New Round");

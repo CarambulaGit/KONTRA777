@@ -26,25 +26,44 @@ public class InGameCanvasController : MonoBehaviour {
     public Text NumOfBullets;
     public Text minutesText;
     public Text secondsText;
+    public Text redTeamScore;
+    public Text blueTeamScore;
     public CanvasStatus canvasStatus;
     public Texture2D cursorImage;
+    public float currSecond;
+    public RoundManager roundManager;
+    public CursorMode cursorMode = CursorMode.Auto;
+
     private bool init;
     private bool isReloading;
 
-    public const float minutesStart = 2;
-    public float currSecond;
-    public float currMinutes;
-
-    public CursorMode cursorMode = CursorMode.Auto;
-
     void Start() {
-        currMinutes = minutesStart;
-        currSecond = 0;
         canvasStatus = CanvasStatus.StartGameMenu;
         OnChangedCanvasStatus();
         SetNecessaryStartGameMenu();
-
+        roundManager.startTimer += TimerTick;
+        currSecond = roundManager.timeOfRound;
         Cursor.SetCursor(cursorImage, new Vector2(29, 35), cursorMode);
+    }
+
+    private void TimerTick(float time) {
+        if (currSecond == 0) {
+            roundManager.timerIsRunning = false;
+            currSecond = time;
+            return;
+        }
+
+        if (currSecond < 10) { 
+            secondsText.color = new Color(255, 0, 0);
+            minutesText.color = new Color(255, 0, 0);
+        }
+
+        var t = System.TimeSpan.FromSeconds(currSecond);
+
+        minutesText.text = (t.Minutes < 10) ? "0" + (t.Minutes).ToString() : (t.Minutes).ToString();
+        secondsText.text = (t.Seconds < 10) ? "0" + (t.Seconds).ToString() : (t.Seconds).ToString();
+
+        currSecond =Mathf.Clamp(currSecond - Time.deltaTime, 0, time);
     }
 
     void Update() {
@@ -62,7 +81,6 @@ public class InGameCanvasController : MonoBehaviour {
             PlayerSoldier.localPlayer.gOPlayer.GetComponent<WeaponController>().IAmReloading += ReloadTimer;
             init = true;
         }
-
         Tick();
     }
 
@@ -94,7 +112,7 @@ public class InGameCanvasController : MonoBehaviour {
         ReloadTick();
         HealthTick();
         AmmoTick();
-        TimerTick();
+        roundManager.StartTimerTick();
     }
 
     private void ReloadTick() {
@@ -104,26 +122,6 @@ public class InGameCanvasController : MonoBehaviour {
         }
     }
 
-    public void TimerTick()
-    {
-        if (currMinutes <= 0 && currSecond <= 0) return;
-        if (currSecond <= 0) {
-            currMinutes--;
-            currSecond = 60;
-            if(currMinutes < 10) minutesText.text = "0"+currMinutes.ToString();
-            minutesText.text = currMinutes.ToString();
-        }
-        currSecond -= Time.deltaTime;
-        if (currSecond < 10) {
-            if (currMinutes == 0) {
-                secondsText.color = new Color(255,0,0);
-                minutesText.color = new Color(255, 0, 0);
-            } 
-            secondsText.text = "0"+System.Math.Round(currSecond).ToString();
-            return;
-        }
-        secondsText.text = System.Math.Round(currSecond).ToString();
-    }
 
     private void HealthTick() {
         healthText.text = PlayerSoldier.localPlayer.health.ToString();
