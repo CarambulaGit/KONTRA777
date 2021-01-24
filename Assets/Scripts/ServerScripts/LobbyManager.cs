@@ -13,9 +13,9 @@ namespace ServerScripts
 		private string path;
 		private string nicknameFileName = "Nickname.txt";
 
-		public CursorMode cursorMode = CursorMode.Auto;
-		public Vector2 hotSpot = Vector2.zero;
-
+		public CursorMode cursorMode = CursorMode.Auto; // я
+		public Vector2 hotSpot = Vector2.zero;          // их   
+														// отделил
 
 		[Range(1, 8)] public int numOfPlayers = 4;
 
