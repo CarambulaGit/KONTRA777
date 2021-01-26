@@ -328,8 +328,11 @@ MonoBehaviour:
   moveSounds:
   - {fileID: 8300000, guid: 975ede5b4df59d640855f7ae0bd3685f, type: 3}
   - {fileID: 8300000, guid: 490270d5837c68e4290cce1c902be8ea, type: 3}
+  playerTeam: {fileID: 4047004921586272281}
   init: 0
   blood: {fileID: 5861940216433586527}
+  redTeam: {r: 0.745283, g: 0.17225882, b: 0.25302067, a: 1}
+  blueTeam: {r: 0.16941082, g: 0.2691994, b: 0.764151, a: 1}
   health: 0
   arsenal: []
   currIdWeapon: 0

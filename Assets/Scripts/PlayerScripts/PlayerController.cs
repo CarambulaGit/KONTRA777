@@ -34,9 +34,12 @@ namespace PlayerScripts {
         public AudioClip deathSound;
         public AudioSource audio;
         public AudioClip[] moveSounds = new AudioClip[2];
+        public SpriteRenderer playerTeam;
         public bool init;
         public bool isDead { get; private set; }
         public ParticleSystem blood;
+        public Color redTeam = new Color(255, 56, 83);
+        public Color blueTeam = new Color(56, 89, 255);
         private InGameManager gameManager;
         private PhotonView photonView;
         private float moveAnimSpeed;
@@ -182,6 +185,15 @@ namespace PlayerScripts {
                 PhotonTeamExtensions.GetPhotonTeam(photonView.Owner), arsenal[0], soldier, gameObject, this);
             if (photonView.IsMine) {
                 PlayerSoldier.localPlayer = player;
+            }
+
+            if (player.team == gameManager.ptm.GetAvailableTeams()[0])
+            {
+                playerTeam.color = Color.Lerp(Color.blue, blueTeam, 1f);
+            }
+            else
+            {
+                playerTeam.color = Color.Lerp(Color.red, redTeam, 1f);
             }
 
             return player;
