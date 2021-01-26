@@ -106,6 +106,8 @@ namespace PlayerScripts {
             if (photonView.ViewID == viewIdWhoShooted) {
                 StartCoroutine(AnimateShoot(startPos, finishPos));
                 StartCoroutine(ShootSoundManager());
+
+                shootParticle.Emit(1);
             }
         }
 
