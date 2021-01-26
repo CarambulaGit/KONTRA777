@@ -40,7 +40,7 @@ public class RoundManager : MonoBehaviour, IOnEventCallback {
     void CheckForEndRound() {
         foreach (var teamID in teamsIsAlive.Keys.ToList()) {
             ptm.TryGetTeamByCode(teamID, out var team);
-            if (PlayerSoldier.GetAllPSByTeam(team).Count == 0) return;
+            if (ptm.GetTeamMembersCount(team) == 0) return;
             if (PlayerSoldier.TeamIsDead(team)) {
                 teamsIsAlive[teamID] = false;
                 Debug.Log($"{team.Name} team is lose");

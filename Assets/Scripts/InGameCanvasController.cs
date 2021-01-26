@@ -12,7 +12,7 @@ public class InGameCanvasController : MonoBehaviour {
         EscMenu = 2
     }
 
-    public bool isReady { get; set; }
+    public bool isReady;
     public GameObject startGameMenu;
     public GameObject sGMHost;
     public GameObject sGMOthers;
@@ -54,8 +54,8 @@ public class InGameCanvasController : MonoBehaviour {
         }
 
         if (currSecond < 10) { 
-            secondsText.color = new Color(255, 0, 0);
-            minutesText.color = new Color(255, 0, 0);
+            secondsText.color = Color.red;
+            minutesText.color = Color.red;
         }
 
         var t = System.TimeSpan.FromSeconds(currSecond);
