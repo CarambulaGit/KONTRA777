@@ -84,11 +84,14 @@ namespace PlayerScripts {
             SynchronizeNetworkVariables();
 
             if (!photonView.IsMine) return;
+            if (Input.GetKeyDown(KeyCode.F2)) {
+                photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
+            }
 
             if (isDead) return;
             isDead = PlayerSoldier.localPlayer.IsDead();
             if (isDead) {
-                Kill();
+                Kill(); 
                 return;
             }
 
@@ -107,9 +110,9 @@ namespace PlayerScripts {
         }
 
         private void AddIntanceOfWeaponToArsenal() {
-            arsenal.Add(Instantiate(P2000));
-            arsenal.Add(Instantiate(ShotGun));
             arsenal.Add(Instantiate(AK47));
+            arsenal.Add(Instantiate(ShotGun));
+            arsenal.Add(Instantiate(P2000));
             arsenal.Add(Instantiate(AWP));
         }
 
