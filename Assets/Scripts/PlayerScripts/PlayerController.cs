@@ -80,24 +80,21 @@ namespace PlayerScripts {
                 init = true;
             }
 
-            // if (!canvasController.isReady) return;
+            if (!canvasController.isReady) return;
             SynchronizeNetworkVariables();
 
             if (!photonView.IsMine) return;
-            if (Input.GetKeyDown(KeyCode.F2)) {
-                photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
-            }
 
             if (isDead) return;
             isDead = PlayerSoldier.localPlayer.IsDead();
             if (isDead) {
-                Kill(); 
+                Kill();
                 return;
             }
 
             Move(out moveAnimSpeed);
             Animate();
-            SelectWeapon(); //kek
+            SelectWeapon();
         }
 
         private void SynchronizeNetworkVariables() {
@@ -212,27 +209,6 @@ namespace PlayerScripts {
             }
         }
 
-        void OnCollisionEnter2D(Collision2D other) { }
-
-
-        // InGameCanvasController start
-
-        [PunRPC]
-        private void StartGameRPC() {
-            canvasController.isReady = true;
-            canvasController.canvasStatus =
-                canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu
-                    ? 0
-                    : canvasController.canvasStatus;
-            canvasController.OnChangedCanvasStatus();
-        }
-
-        public void OnStartGame() {
-            photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
-        }
-
-        // InGameCanvasController end  
-
         public void isDamaged() {
             slowdownTimer = SLOWDOWN_TIME;
         }
@@ -245,7 +221,7 @@ namespace PlayerScripts {
                 }
             }
         }
-        
+
         public void SetDefaultState() {
             transform.position = gameManager.SpawnPoints[PlayerSoldier.localPlayer.team.Code - 1].position;
             PlayerSoldier.localPlayer.weapon = Instantiate(weapon);

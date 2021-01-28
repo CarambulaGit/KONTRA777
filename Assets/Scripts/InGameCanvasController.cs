@@ -6,7 +6,7 @@ using Resources.Classes;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InGameCanvasController : MonoBehaviour {
+public class InGameCanvasController : MonoBehaviour, IPunObservable {
     public enum CanvasStatus : ushort {
         StartGameMenu = 1,
         EscMenu = 2
@@ -53,7 +53,7 @@ public class InGameCanvasController : MonoBehaviour {
             return;
         }
 
-        if (currSecond < 10) { 
+        if (currSecond < 10) {
             secondsText.color = Color.red;
             minutesText.color = Color.red;
         }
@@ -63,30 +63,39 @@ public class InGameCanvasController : MonoBehaviour {
         minutesText.text = (t.Minutes < 10) ? "0" + (t.Minutes).ToString() : (t.Minutes).ToString();
         secondsText.text = (t.Seconds < 10) ? "0" + (t.Seconds).ToString() : (t.Seconds).ToString();
 
-        currSecond =Mathf.Clamp(currSecond - Time.deltaTime, 0, time);
+        currSecond = Mathf.Clamp(currSecond - Time.deltaTime, 0, time);
     }
 
     void Update() {
+        canvasStatus = canvasStatus == CanvasStatus.EscMenu
+            ? canvasStatus
+            : (isReady ? canvasStatus : CanvasStatus.StartGameMenu);
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            canvasStatus = canvasStatus == CanvasStatus.EscMenu ? 0 : CanvasStatus.EscMenu;
-            OnChangedCanvasStatus();
+            canvasStatus = canvasStatus == CanvasStatus.EscMenu
+                ? (canvasStatus == CanvasStatus.StartGameMenu ? canvasStatus : 0)
+                : CanvasStatus.EscMenu;
         }
+        OnChangedCanvasStatus();
 
         if (PlayerSoldier.localPlayer == null) return;
 
         if (!init) {
-           
             healthBar.maxValue = PlayerSoldier.localPlayer.soldier.health;
             fill.color = gradient.Evaluate(1f);
+            if (PlayerSoldier.localPlayer.gOPlayer.Equals(null)) return;
             PlayerSoldier.localPlayer.gOPlayer.GetComponent<WeaponController>().IAmReloading += ReloadTimer;
             init = true;
+        }
+
+        if (!isReady) {
+            return;
         }
         Tick();
     }
 
     public void OnChangedCanvasStatus() {
-        // startGameMenu.SetActive(canvasStatus == CanvasStatus.StartGameMenu);
-        startGameMenu.SetActive(false); // todo
+        startGameMenu.SetActive(canvasStatus == CanvasStatus.StartGameMenu);
+        // startGameMenu.SetActive(false); // todo
         escMenu.SetActive(canvasStatus == CanvasStatus.EscMenu);
     }
 
@@ -95,8 +104,10 @@ public class InGameCanvasController : MonoBehaviour {
     }
 
     public void OnStartGame() {
-        if (PlayerSoldier.localPlayer == null) return;
-        PlayerSoldier.localPlayer.playerController.OnStartGame();
+        // if (PlayerSoldier.localPlayer == null) return;
+        // PlayerSoldier.localPlayer.playerController.OnStartGame();
+        isReady = true;
+        canvasStatus = canvasStatus == CanvasStatus.EscMenu ? canvasStatus : 0;
     }
 
     private void SetNecessaryStartGameMenu() {
@@ -138,6 +149,13 @@ public class InGameCanvasController : MonoBehaviour {
         if (PlayerSoldier.localPlayer.weapon.isReloading) reloadTimer.gameObject.SetActive(true);
         reloadTimer.fillAmount += Time.deltaTime / PlayerSoldier.localPlayer.weapon.reloadTime;
     }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+        if (stream.IsWriting && PhotonNetwork.IsMasterClient) {
+            stream.SendNext(isReady);
+        }
+        else {
+            this.isReady = (bool) stream.ReceiveNext();
+        }
+    }
 }
-
-

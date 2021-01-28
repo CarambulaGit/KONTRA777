@@ -11,17 +11,20 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class RoundManager : MonoBehaviour, IOnEventCallback {
+    public string canvasTag = "InGameCanvas";
     public PhotonTeamsManager ptm;
     public event Action<float> startTimer;
     public float timeOfRound = 120;
     public bool timerIsRunning;
     private Dictionary<byte, bool> teamsIsAlive = new Dictionary<byte, bool>();
+    private InGameCanvasController canvasController;
 
     public int redTeamScore { get; set; }
     public int blueTeamScore { get; set; }
 
     void Start() {
         SetDefaultValues();
+        canvasController = GameObject.FindWithTag(canvasTag).GetComponent<InGameCanvasController>();
     }
 
     void Update() {
@@ -29,7 +32,11 @@ public class RoundManager : MonoBehaviour, IOnEventCallback {
             return;
         }
 
-        SetDefaultValues(); // todo remove this when players wouldn't connecting while round is going
+        if (!canvasController.isReady) {
+            return;
+        }
+        
+        SetDefaultValues(); // todo remove this when players wouldn't connecting while round is going, if leave 
         CheckForEndRound();
         if (Input.GetKeyDown(KeyCode.F1)) {
             PhotonNetwork.RaiseEvent(0, null, new RaiseEventOptions() {Receivers = ReceiverGroup.All},
