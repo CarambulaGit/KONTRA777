@@ -118,7 +118,8 @@ namespace PlayerScripts {
             source.clip = PlayerController.weapon.shootSound;
             source.minDistance = 1;
             source.maxDistance = 50;
-            source.volume = 0.5f;
+            source.volume = 1f;
+            source.spatialBlend = 1f;
             source.Play();
 
             yield return new WaitForSeconds(source.clip.length);
