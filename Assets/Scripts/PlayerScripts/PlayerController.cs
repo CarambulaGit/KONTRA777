@@ -80,7 +80,7 @@ namespace PlayerScripts {
                 init = true;
             }
 
-            // if (!canvasController.isReady) return;
+            if (!canvasController.isReady) return;
             SynchronizeNetworkVariables();
 
             if (!photonView.IsMine) return;
@@ -94,7 +94,7 @@ namespace PlayerScripts {
 
             Move(out moveAnimSpeed);
             Animate();
-            SelectWeapon(); //kek
+            SelectWeapon();
         }
 
         private void SynchronizeNetworkVariables() {
@@ -107,9 +107,9 @@ namespace PlayerScripts {
         }
 
         private void AddIntanceOfWeaponToArsenal() {
-            arsenal.Add(Instantiate(P2000));
-            arsenal.Add(Instantiate(ShotGun));
             arsenal.Add(Instantiate(AK47));
+            arsenal.Add(Instantiate(ShotGun));
+            arsenal.Add(Instantiate(P2000));
             arsenal.Add(Instantiate(AWP));
         }
 
@@ -209,27 +209,6 @@ namespace PlayerScripts {
             }
         }
 
-        void OnCollisionEnter2D(Collision2D other) { }
-
-
-        // InGameCanvasController start
-
-        [PunRPC]
-        private void StartGameRPC() {
-            canvasController.isReady = true;
-            canvasController.canvasStatus =
-                canvasController.canvasStatus == InGameCanvasController.CanvasStatus.StartGameMenu
-                    ? 0
-                    : canvasController.canvasStatus;
-            canvasController.OnChangedCanvasStatus();
-        }
-
-        public void OnStartGame() {
-            photonView.RPC(nameof(StartGameRPC), RpcTarget.AllBuffered, null);
-        }
-
-        // InGameCanvasController end  
-
         public void isDamaged() {
             slowdownTimer = SLOWDOWN_TIME;
         }
@@ -242,7 +221,7 @@ namespace PlayerScripts {
                 }
             }
         }
-        
+
         public void SetDefaultState() {
             transform.position = gameManager.SpawnPoints[PlayerSoldier.localPlayer.team.Code - 1].position;
             PlayerSoldier.localPlayer.weapon = Instantiate(weapon);

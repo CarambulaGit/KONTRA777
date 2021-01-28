@@ -31,7 +31,7 @@ namespace PlayerScripts {
         }
 
         void Update() {
-            // if (!canvasController.isReady) return;
+            if (!canvasController.isReady) return;
             if (!photonView.IsMine) return;
             if (PlayerController.isDead) return;
             if (!PlayerController.init) return;
@@ -98,7 +98,7 @@ namespace PlayerScripts {
                 PlayerSoldier.localPlayer.playerController.isDamaged();
             }
 
-            PlayerSoldier.FindPSByPhotonViewID(viewIdBeenDamaged).playerController.blood.Emit(4);
+            PlayerSoldier.FindPSByPhotonViewID(viewIdBeenDamaged)?.playerController.blood.Emit(4);
         }
 
         [PunRPC]

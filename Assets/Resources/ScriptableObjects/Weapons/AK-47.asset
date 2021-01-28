@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AK-47
   m_EditorClassIdentifier: 
   name: AK-47
-  weaponID: 3
+  weaponID: 1
   damage: 27
   bulletsInMagazine: 30
   numOfBullets: 120

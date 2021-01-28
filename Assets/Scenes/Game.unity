@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 4065193}
   - component: {fileID: 4065192}
   - component: {fileID: 4065196}
+  - component: {fileID: 4065197}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: InGameCanvas
@@ -239,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da367746f2912eb448209dbc910b17a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isReady: 0
   startGameMenu: {fileID: 2056802653}
   sGMHost: {fileID: 2035697785}
   sGMOthers: {fileID: 472816997}
@@ -287,6 +289,28 @@ MonoBehaviour:
   currSecond: 0
   roundManager: {fileID: 1143153181}
   cursorMode: 0
+--- !u!114 &4065197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4065191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 4065196}
+  viewIdField: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &23983729
 GameObject:
   m_ObjectHideFlags: 0
